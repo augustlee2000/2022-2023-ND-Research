@@ -181,7 +181,7 @@ for ientry in range(tree.GetEntries()):
         hist_array[2].Fill(vec_final.M())
         
         
-        btag_array_i = tree.FatJet_btagCSVV2
+        btag_array_i = tree.FatJet_btagHbb
         btag_array = np.frombuffer(btag_array_i, dtype=np.float32)
         
         btag_sorted = np.where(btag_array > 0.4184) #tight btagging on Deep CSV
@@ -215,10 +215,10 @@ ROOT.gStyle.SetOptStat(0000000)
 c1=ROOT.TCanvas("","",800,600)
 c1.Draw()
 c1.cd()
-hist_array[3].Draw("same")
-hist_array[2].Draw("same")
-hist_array[1].Draw("same")
-hist_array[0].Draw("same")
+hist_array[3].Draw("hist_same")
+hist_array[2].Draw("hist_same")
+hist_array[1].Draw("hist_same")
+hist_array[0].Draw("hist_same")
 hists_legend.Draw()
 
 AddCMSLumi(c1, 138, "internal")
