@@ -36,3 +36,6 @@ XtoAAto4b_X3000_A50
 
 /store/mc/RunIIAutumn18NanoAODv7/XtoAAto4b_X800A50_TuneCP5_13TeV-madgraph-pythia8/NANOAODSIM/Nano02Apr2020_102X_upgrade2018_realistic_v21-v1/260000/8EF2626F-B59C-7146-A062-7AA286893D59.root
 XtoAAto4b_X800_A50.root
+
+/store/mc/RunIIAutumn18NanoAODv7/XtoAAto4b_X800A100_TuneCP5_13TeV-madgraph-pythia8/NANOAODSIM/Nano02Apr2020_102X_upgrade2018_realistic_v21-v1/70000/615E8B57-9B3A-994D-9562-E6A4166988F5.root
+XtoAAto4b_X800_A100.root
