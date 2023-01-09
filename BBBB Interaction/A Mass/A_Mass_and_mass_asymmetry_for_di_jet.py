@@ -84,63 +84,6 @@ def AddCMSLumi(pad, fb, extra):
     pad.Update()
 
 
-# In[18]:
-
-
-file1 = ROOT.TFile("XtoAAto4b_X1000_A30.root","READ")
-tree = file1.Get("Events")
-
-hists_legend = ROOT.TLegend(.65,.70,.90,.89)
-hists_legend.Clear()
-hists_legend.SetLineWidth(0)
-
-colors=[ROOT.kBlue,ROOT.kRed, ROOT.kBlack, ROOT.kGreen]
-names = ["A Mass from Fat Jets" ]  
-
-hist_array = MakeHist(1,colors,names,"XtoAAto4b_X3000_A50: A Mass" ,"Mass (GeV)","Normalized Instances",100,0,75)
-legends(hist_array[0])
-
-i = 0
-j = 1
-k = 2
-l = 3
-
-
-for ientry in range(tree.GetEntries()):
-    tree.GetEntry(ientry)
-    
-    if tree.nFatJet > 1:
-        
-        btag_array_i = tree.FatJet_btagHbb
-        btag_array = np.frombuffer(btag_array_i, dtype=np.float32)
-        
-        btag_sorted = np.where(btag_array > 0.7527) #tight btagging on Deep CSV 0.7527
-        btag_sorted = btag_sorted[0]
-        
-        if btag_sorted.size > 1:
-            
-            FatJet_msoftdrop = np.frombuffer(tree.FatJet_msoftdrop, dtype=np.float32)
-            
-            hist_array[0].Fill(FatJet_msoftdrop[btag_sorted[0]])
-
-            
-            
-HistNorm(hist_array[0])
-
-ROOT.gStyle.SetOptStat(0000000)
-c1=ROOT.TCanvas("","",800,600)
-c1.Draw()
-c1.cd()
-hist_array[0].Draw("hist_same")
-hists_legend.Draw()
-
-AddCMSLumi(c1, 138, "Internal")
-c1.cd()    
-
-
-# In[37]:
-
-
 def vec_creator(phi,eta,mass,pt):
     vec_temp = ROOT.TLorentzVector()
     vec_temp.SetPtEtaPhiM(pt,eta,phi,mass)
