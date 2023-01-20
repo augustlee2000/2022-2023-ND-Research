@@ -84,92 +84,6 @@ def AddCMSLumi(pad, fb, extra):
     pad.Update()
 
 
-# In[15]:
-
-
-def vec_creator(phi,eta,mass,pt):
-    vec_temp = ROOT.TLorentzVector()
-    vec_temp.SetPtEtaPhiM(pt,eta,phi,mass)
-    
-    return vec_temp
-    
-
-file1 = ROOT.TFile("XtoAAto4b_X1000_A100.root","READ")
-tree = file1.Get("Events")
-
-
-h1 = ROOT.TH1F("Di-Jet mass vs mass asymmetry", "XtoAAto4b_X1000_A100: Di-Jet mass vs mass asymmetry ", 100, 0, 2*pi)
-
-h1.GetXaxis().SetTitle("2-d angle (radians)")
-h1.GetYaxis().SetTitle("Normalized Instances")
-
-for ientry in range(tree.GetEntries()):
-    tree.GetEntry(ientry)
-    
-    if tree.nJet > 3:
-        
-        btag_array_i = tree.Jet_btagCSVV2
-        btag_array = np.frombuffer(btag_array_i, dtype=np.float32)
-        
-        btag_sorted = np.where(btag_array > 0.7527)#tight btagging on Deep CSV
-        btag_sorted = btag_sorted[0]
-        
-        if btag_sorted.size > 3:
-            
-            eta_array_intital = tree.Jet_eta
-            phi_array_intital = tree.Jet_phi
-            pt_array_intital = tree.Jet_pt
-            mass_array_intital = tree.Jet_mass
-    
-            eta_array = np.frombuffer(eta_array_intital, dtype=np.float32)
-            phi_array = np.frombuffer(phi_array_intital, dtype=np.float32)
-            pt_array = np.frombuffer(pt_array_intital, dtype=np.float32)
-            mass_array = np.frombuffer(mass_array_intital, dtype=np.float32)
-            
-            vector_array = np.array([])
-            
-            for q in range(btag_sorted.size):
-                vector  = vec_creator(phi_array[q],eta_array[q],mass_array[q],pt_array[q])
-                
-                vector_array = np.append(vector_array, vector)
-                
-            pair_array = np.array([])
-            M = np.size(vector_array)
-            for i in range(M):
-                j=i+1
-                while j <M:
-                    pair_array = np.append(pair_array,[i,j])
-                    j+=1
-            rows = int(len(pair_array)/2)    
-            pair_array = np.resize(pair_array, (rows,2))
-            
-            for x in range(rows):
-                for y in range(rows):
-                    a = int(pair_array[x,0])
-                    b = int(pair_array[x,1])
-                    c = int(pair_array[y,0])
-                    d = int(pair_array[y,1])
-                    if ((a == c) or (a == d) or (b == c) or (b == d) or (c < a) ):
-                        a=a
-                    else:
-                        vec_final_1 = vector_array[a] + vector_array[b]
-                        vec_final_2 = vector_array[c] + vector_array[d]
-                        
-                        h1.Fill(vec_final_1.DeltaR(vec_final_2))
-                        
-                        
-                        
-ROOT.gStyle.SetOptStat(0000000)            
-c1=ROOT.TCanvas()
-c1.Draw()
-c1.cd()
-h1.Draw()
-c1.cd()
-
-
-# In[13]:
-
-
 def vec_creator(phi,eta,mass,pt):
     vec_temp = ROOT.TLorentzVector()
     vec_temp.SetPtEtaPhiM(pt,eta,phi,mass)
@@ -262,10 +176,3 @@ c1.Draw()
 c1.cd()
 h1.Draw()
 c1.cd()
-
-
-# In[ ]:
-
-
-
-
