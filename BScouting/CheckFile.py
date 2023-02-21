@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 # Standard Includes: ----------------------------------------#
 import os
 import array
