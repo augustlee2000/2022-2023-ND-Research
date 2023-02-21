@@ -17,7 +17,7 @@ cmsenv
 git cms-init
 scram build -j 4
 
-hltGetConfiguration /dev/CMSSW_12_4_0/GRun --globaltag auto:phase1_2022_realistic --full --mc --type GRun --eras Run3 --process HLTX --unprescale --no-output --input root://xrootd-cms.infn.it/**INSERT LINE 8 OR 9**   --max-events 100 --l1-emulator FullMC --l1 L1Menu_Collisions2022_v1_2_0_xml --paths HLTriggerFirstPath,DST_Run3_PFScoutingPixelTracking_v16,Dataset_ScoutingPFRun3,ScoutingPFOutput > scoutingPF.py
+hltGetConfiguration /dev/CMSSW_12_4_0/GRun --globaltag auto:phase1_2022_realistic --full --mc --type GRun --eras Run3 --process HLTX --unprescale --no-output --input root://xrootd-cms.infn.it/(INSERT LINE 8 OR 9)!!!   --max-events 100 --l1-emulator FullMC --l1 L1Menu_Collisions2022_v1_2_0_xml --paths HLTriggerFirstPath,DST_Run3_PFScoutingPixelTracking_v16,Dataset_ScoutingPFRun3,ScoutingPFOutput > scoutingPF.py
 
 after running this command you it will produce a .py file; if you want the gen particle you need to add 'keep recoGenParticles_genParticles_*_*' to the .py file
 
