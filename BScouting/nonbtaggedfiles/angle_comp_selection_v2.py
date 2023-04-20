@@ -118,6 +118,7 @@ legends(hist_array_pt[3])
 
 
 for ientry in range(tree.GetEntries()):
+    tree.GetEntry(ientry)
     print("="*10)
 
     test = tree.GenPart_mass
