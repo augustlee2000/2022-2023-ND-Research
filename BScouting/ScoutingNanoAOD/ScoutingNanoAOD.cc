@@ -522,7 +522,14 @@ ScoutingNanoAOD::ScoutingNanoAOD(const edm::ParameterSet& iConfig):
 	    
     //GenPart
     tree->Branch("n_GenPart", &n_GenPart_);
-    tree->Branch(
+    tree->Branch("GenPart_pt", &GenPart_pt_);
+    tree->Branch("GenPart_eta", &GenPart_eta_);
+    tree->Branch("GenPart_phi", &GenPart_phi_);
+    tree->Branch("GenPart_m", &GenPart_m_);
+    tree->Branch("GenPart_StatusFlags", &GenPart_StatusFlags_);
+    tree->Branch("GenPart_pdgId", &GenPart_pdgId_);
+    tree->Branch("GenPart_genPartIdxMother", &GenPart_genPartIdxMother_);
+    tree->Branch("GenPart_genPartMother", &GenPart_genPartMother_);		 
 
     //Photons
     tree->Branch("n_pho"            	   ,&n_pho 			, "n_pho/i"		);
@@ -664,6 +671,9 @@ void ScoutingNanoAOD::analyze(const edm::Event& iEvent, const edm::EventSetup& i
 
     Handle<vector<Run3ScoutingMuon> > muonsH;
     iEvent.getByToken(muonsToken, muonsH);
+	
+    Handle<vector<Run3ScouitngPartton> > partonH;
+    iEvent.getByToken(partonToken, partonH);
 
     Handle<vector<Run3ScoutingPhoton> > photonsH;
     iEvent.getByToken(photonsToken, photonsH);
@@ -810,6 +820,19 @@ void ScoutingNanoAOD::analyze(const edm::Event& iEvent, const edm::EventSetup& i
         n_mu++;
     }
 
+    n_GenPart = 0;
+    for (auto iter = partonH->begin(); iter != partonH->end(); ++iter) {
+	 GenPart_pt_.push_back(iter->pt());
+	 GenPart_eta_.push_back(iter->eta());
+	 GenPart_phi_.push_back(iter->phi());
+	 GenPart_m_.push_back(iter->m());
+	 GenPart_statusFlags_.push_back(iter->statusFlags());
+	 GenPart_pdgId_.push_back(iter->pdgId());
+	 GenPart_genPartIdxMother_.push_back(iter->genPartIdxMother());
+	 GenPart_genPartMother_.push_back(iter->genPartMother());
+	 n_GenPart ++;
+    }
+	
 
     n_pho = 0;
     for (auto iter = photonsH->begin(); iter != photonsH->end(); ++iter) {
@@ -1044,6 +1067,14 @@ void ScoutingNanoAOD::clearVars(){
     Muon_trk_vy_.clear();
     Muon_trk_vz_.clear();
     Muon_vtxIndx_.clear();
+    GenPart_pt_.clear();
+    GenPart_eta_.clear();
+    GenPart_phi_.clear();
+    GenPart_m_.clear();
+    GenPart_statusFlags_.clear();
+    GenPart_pdgId_.clear();
+    GenPart_genPartIdxMother_.clear();
+    GenPart_genPartMother_.clear();
     Jet_pt_.clear();
     Jet_eta_.clear();
     Jet_phi_.clear();
