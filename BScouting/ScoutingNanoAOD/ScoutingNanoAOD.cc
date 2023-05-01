@@ -128,6 +128,7 @@ private:
     virtual void clearVars();
 
     const edm::EDGetTokenT<std::vector<Run3ScoutingMuon> >      muonsToken;
+    const edm::EDGetTOkenT<std::vector<Run3ScoutingParton> >      partonToken; //added   
     const edm::EDGetTokenT<std::vector<Run3ScoutingElectron> >  	electronsToken;
     const edm::EDGetTokenT<std::vector<Run3ScoutingPhoton> >  	photonsToken;
     const edm::EDGetTokenT<std::vector<Run3ScoutingParticle> >  	pfcandsToken;
@@ -260,6 +261,17 @@ private:
     //vector<reco::HitPattern> trk_hitPattern_;
     vector<vector<Int_t> > Muon_vtxIndx_;
 
+    //Parton
+    UInt_t n_GenPart;
+    vector<Float_t> GenPart_pt_;
+    vector<Float_t> GenPart_eta_;
+    vector<Float_t> GenPart_phi_;
+    vector<Float_t> GenPart_m_;
+    vector<Float_t> GenPart_statusFlags_;
+    vector<Float_t> GenPart_pdgId_;
+    vector<Float_t> GenPart_genPartIdxMother_;
+    vector<Float_t> GenPart_genPartMother_;
+
 
     //PFJets
     const static int 	max_jet = 1000;
@@ -378,7 +390,8 @@ private:
 };
 
 ScoutingNanoAOD::ScoutingNanoAOD(const edm::ParameterSet& iConfig): 
-    muonsToken               (consumes<std::vector<Run3ScoutingMuon> >             (iConfig.getParameter<edm::InputTag>("muons"))), 
+    muonsToken               (consumes<std::vector<Run3ScoutingMuon> >             (iConfig.getParameter<edm::InputTag>("muons"))),
+    partonToken               (consumes<std::vector<Run3ScoutingParton> >             (iConfig.getParameter<edm::InputTag>("parton"))),
     electronsToken           (consumes<std::vector<Run3ScoutingElectron> >         (iConfig.getParameter<edm::InputTag>("electrons"))), 
     photonsToken           (consumes<std::vector<Run3ScoutingPhoton> >         (iConfig.getParameter<edm::InputTag>("photons"))), 
     pfcandsToken             (consumes<std::vector<Run3ScoutingParticle> >         (iConfig.getParameter<edm::InputTag>("pfcands"))), 
@@ -506,6 +519,10 @@ ScoutingNanoAOD::ScoutingNanoAOD(const edm::ParameterSet& iConfig):
     tree->Branch("Muon_trk_vy", &Muon_trk_vy_ );
     tree->Branch("Muon_trk_vz", &Muon_trk_vz_ );
     tree->Branch("Muon_vtxIndx", &Muon_vtxIndx_ );
+	    
+    //GenPart
+    tree->Branch("n_GenPart", &n_GenPart_);
+    tree->Branch(
 
     //Photons
     tree->Branch("n_pho"            	   ,&n_pho 			, "n_pho/i"		);
