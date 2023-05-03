@@ -128,7 +128,7 @@ private:
     virtual void clearVars();
 
     const edm::EDGetTokenT<std::vector<Run3ScoutingMuon> >      muonsToken;
-    const edm::EDGetTOkenT<std::vector<Run3ScoutingParton> >      partonToken; //added   
+    const edm::EDGetTOkenT<std::vector<Run3ScoutingParton> >      partonToken; //added by August  
     const edm::EDGetTokenT<std::vector<Run3ScoutingElectron> >  	electronsToken;
     const edm::EDGetTokenT<std::vector<Run3ScoutingPhoton> >  	photonsToken;
     const edm::EDGetTokenT<std::vector<Run3ScoutingParticle> >  	pfcandsToken;
@@ -261,7 +261,7 @@ private:
     //vector<reco::HitPattern> trk_hitPattern_;
     vector<vector<Int_t> > Muon_vtxIndx_;
 
-    //Parton
+    //Parton added by August
     UInt_t n_GenPart;
     vector<Float_t> GenPart_pt_;
     vector<Float_t> GenPart_eta_;
@@ -391,7 +391,7 @@ private:
 
 ScoutingNanoAOD::ScoutingNanoAOD(const edm::ParameterSet& iConfig): 
     muonsToken               (consumes<std::vector<Run3ScoutingMuon> >             (iConfig.getParameter<edm::InputTag>("muons"))),
-    partonToken               (consumes<std::vector<Run3ScoutingParton> >             (iConfig.getParameter<edm::InputTag>("parton"))),
+    partonToken               (consumes<std::vector<Run3ScoutingParton> >             (iConfig.getParameter<edm::InputTag>("parton"))), //added by August
     electronsToken           (consumes<std::vector<Run3ScoutingElectron> >         (iConfig.getParameter<edm::InputTag>("electrons"))), 
     photonsToken           (consumes<std::vector<Run3ScoutingPhoton> >         (iConfig.getParameter<edm::InputTag>("photons"))), 
     pfcandsToken             (consumes<std::vector<Run3ScoutingParticle> >         (iConfig.getParameter<edm::InputTag>("pfcands"))), 
@@ -520,7 +520,7 @@ ScoutingNanoAOD::ScoutingNanoAOD(const edm::ParameterSet& iConfig):
     tree->Branch("Muon_trk_vz", &Muon_trk_vz_ );
     tree->Branch("Muon_vtxIndx", &Muon_vtxIndx_ );
 	    
-    //GenPart
+    //GenPart added by August 
     tree->Branch("n_GenPart", &n_GenPart_);
     tree->Branch("GenPart_pt", &GenPart_pt_);
     tree->Branch("GenPart_eta", &GenPart_eta_);
@@ -672,7 +672,7 @@ void ScoutingNanoAOD::analyze(const edm::Event& iEvent, const edm::EventSetup& i
     Handle<vector<Run3ScoutingMuon> > muonsH;
     iEvent.getByToken(muonsToken, muonsH);
 	
-    Handle<vector<Run3ScouitngPartton> > partonH;
+    Handle<vector<Run3ScouitngPartton> > partonH; //added by August
     iEvent.getByToken(partonToken, partonH);
 
     Handle<vector<Run3ScoutingPhoton> > photonsH;
@@ -820,7 +820,7 @@ void ScoutingNanoAOD::analyze(const edm::Event& iEvent, const edm::EventSetup& i
         n_mu++;
     }
 
-    n_GenPart = 0;
+    n_GenPart = 0; //added by August
     for (auto iter = partonH->begin(); iter != partonH->end(); ++iter) {
 	 GenPart_pt_.push_back(iter->pt());
 	 GenPart_eta_.push_back(iter->eta());
@@ -1067,7 +1067,7 @@ void ScoutingNanoAOD::clearVars(){
     Muon_trk_vy_.clear();
     Muon_trk_vz_.clear();
     Muon_vtxIndx_.clear();
-    GenPart_pt_.clear();
+    GenPart_pt_.clear(); //added by August
     GenPart_eta_.clear();
     GenPart_phi_.clear();
     GenPart_m_.clear();
