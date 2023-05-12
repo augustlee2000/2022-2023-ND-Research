@@ -42,6 +42,7 @@
 #include "DataFormats/HLTReco/interface/TriggerEvent.h"
 
 #include "DataFormats/JetReco/interface/GenJet.h"
+#include "DataFormats/HepMCCandidate/interface/GenParticle.h"
 
 #include "DataFormats/Scouting/interface/Run3ScoutingElectron.h"
 #include "DataFormats/Scouting/interface/Run3ScoutingPhoton.h"
@@ -130,7 +131,10 @@ private:
     virtual void clearVars();
 
     const edm::EDGetTokenT<std::vector<Run3ScoutingMuon> >      muonsToken;
-    const edm::EDGetTokenT<std::vector<reco::GenJet>  >      partonToken; //added by August  
+    const edm::EDGetTokenT<std::vector<reco::GenParticle>  >      partonToken; //added by August 
+    const edm::EDGetTokenT<std::vector<reco::GenJet>  >      ak4jetToken;
+    const edm::EDGetTokenT<std::vector<reco::GenJet>  >      ak4jetNoNuToken;
+    const edm::EDGetTokenT<std::vector<reco::GenJet>  >      ak8jetToken; 
     const edm::EDGetTokenT<std::vector<Run3ScoutingElectron> >  	electronsToken;
     const edm::EDGetTokenT<std::vector<Run3ScoutingPhoton> >  	photonsToken;
     const edm::EDGetTokenT<std::vector<Run3ScoutingParticle> >  	pfcandsToken;
@@ -273,6 +277,29 @@ private:
     vector<Float_t> GenPart_pdgId_;
     vector<Float_t> GenPart_genPartIdxMother_;
 
+    //I for sure will have to add some stuff but should not be a huge deal
+    //Ak4GenJets
+    UInt_t n_GenJetAK4;
+    vector<Float_t> GenJetAK4_pt_;
+    vector<Float_t> GenJetAK4_eta_;
+    vector<Float_t> GenJetAK4_phi_;
+    vector<Float_t> GenJetAK4_m_;
+
+    //AK4GenJetsNoNu
+    UInt_t n_GenJetAK4NoNu;
+    vector<Float_t> GenJetAK4NoNu_pt_;
+    vector<Float_t> GenJetAK4NoNu_eta_;
+    vector<Float_t> GenJetAK4NoNu_phi_;
+    vector<Float_t> GenJetAK4NoNu_m_;
+
+    //AK8GenJets
+    UInt_t n_GenJetAK8;
+    vector<Float_t> GenJetAK8_pt_;
+    vector<Float_t> GenJetAK8_eta_;
+    vector<Float_t> GenJetAK8_phi_;
+    vector<Float_t> GenJetAK8_m_;
+
+
 
     //PFJets
     const static int 	max_jet = 1000;
@@ -392,7 +419,10 @@ private:
 
 ScoutingNanoAOD::ScoutingNanoAOD(const edm::ParameterSet& iConfig): 
     muonsToken               (consumes<std::vector<Run3ScoutingMuon> >             (iConfig.getParameter<edm::InputTag>("muons"))),
-    partonToken               (consumes<std::vector<reco::GenJet> >             (iConfig.getParameter<edm::InputTag>("AK4"))), //added by August
+    partonToken               (consumes<std::vector<reco::GenParticle> >             (iConfig.getParameter<edm::InputTag>("GenParticle"))), //added by August
+    ak4jetToken               (consumes<std::vector<reco::GenJet> >             (iConfig.getParameter<edm::InputTag>("GenJetAK4"))),
+    ak4jetNoNuToken               (consumes<std::vector<reco::GenJet> >             (iConfig.getParameter<edm::InputTag>("GenJetAK4NoNu"))),
+    ak8jetToken               (consumes<std::vector<reco::GenJet> >             (iConfig.getParameter<edm::InputTag>("GenJetAK8"))), 
     electronsToken           (consumes<std::vector<Run3ScoutingElectron> >         (iConfig.getParameter<edm::InputTag>("electrons"))), 
     photonsToken           (consumes<std::vector<Run3ScoutingPhoton> >         (iConfig.getParameter<edm::InputTag>("photons"))), 
     pfcandsToken             (consumes<std::vector<Run3ScoutingParticle> >         (iConfig.getParameter<edm::InputTag>("pfcands"))), 
@@ -529,7 +559,28 @@ ScoutingNanoAOD::ScoutingNanoAOD(const edm::ParameterSet& iConfig):
     tree->Branch("GenPart_m", &GenPart_m_);
     tree->Branch("GenPart_StatusFlags", &GenPart_statusFlags_);
     tree->Branch("GenPart_pdgId", &GenPart_pdgId_);
-    tree->Branch("GenPart_genPartIdxMother", &GenPart_genPartIdxMother_);	 
+    tree->Branch("GenPart_genPartIdxMother", &GenPart_genPartIdxMother_);
+
+    //GenJetAk4
+    tree->Branch("n_GenJetAK4", &n_GenJetAK4);
+    tree->Branch("GenJetAK4_pt", &GenJetAK4_pt_);
+    tree->Branch("GenJetAK4_eta", &GenJetAK4_eta_);
+    tree->Branch("GenJetAK4_phi", &GenJetAK4_phi_);
+    tree->Branch("GenJetAK4_m", &GenJetAK4_m_);	 
+
+    //GenJetAk4NoNu
+    tree->Branch("n_GenJetAK4NoNu", &n_GenJetAK4NoNu);
+    tree->Branch("GenJetAK4NoNu_pt", &GenJetAK4NoNu_pt_);
+    tree->Branch("GenJetAK4NoNu_eta", &GenJetAK4NoNu_eta_);
+    tree->Branch("GenJetAK4NoNu_phi", &GenJetAK4NoNu_phi_);
+    tree->Branch("GenJetAK4NoNu_m", &GenJetAK4NoNu_m_);
+
+    //GenJetAk4
+    tree->Branch("n_GenJetAK8", &n_GenJetAK8);
+    tree->Branch("GenJetAK8_pt", &GenJetAK8_pt_);
+    tree->Branch("GenJetAK8_eta", &GenJetAK8_eta_);
+    tree->Branch("GenJetAK8_phi", &GenJetAK8_phi_);
+    tree->Branch("GenJetAK8_m", &GenJetAK8_m_);	 	 
 
     //Photons
     tree->Branch("n_pho"            	   ,&n_pho 			, "n_pho/i"		);
@@ -672,8 +723,17 @@ void ScoutingNanoAOD::analyze(const edm::Event& iEvent, const edm::EventSetup& i
     Handle<vector<Run3ScoutingMuon> > muonsH;
     iEvent.getByToken(muonsToken, muonsH);
 	
-    Handle<vector<reco::GenJet> > partonH; //added by August
+    Handle<vector<reco::GenParticle> > partonH; //added by August
     iEvent.getByToken(partonToken, partonH);
+
+    Handle<vector<reco::GenJet> > GenJetAK4H; //added by August
+    iEvent.getByToken(ak4jetToken, GenJetAK4H);
+
+    Handle<vector<reco::GenJet> > GenJetAK4NoNuH; //added by August
+    iEvent.getByToken(ak4jetNoNuToken, GenJetAK4NoNuH);
+
+    Handle<vector<reco::GenJet> > GenJetAK8H; //added by August
+    iEvent.getByToken(ak8jetToken, GenJetAK8H);
 
     Handle<vector<Run3ScoutingPhoton> > photonsH;
     iEvent.getByToken(photonsToken, photonsH);
@@ -826,13 +886,39 @@ void ScoutingNanoAOD::analyze(const edm::Event& iEvent, const edm::EventSetup& i
 	 GenPart_eta_.push_back(iter->eta());
 	 GenPart_phi_.push_back(iter->phi());
 	 GenPart_m_.push_back(iter->mass());
-	 GenPart_statusFlags_.push_back(iter->status()); //these are not filling
-	 GenPart_pdgId_.push_back(iter->pdgId()); //this is also not filling
+	 GenPart_statusFlags_.push_back(iter->status());
+	 GenPart_pdgId_.push_back(iter->pdgId());
 	 //GenPart_genPartIdxMother_.push_back(iter->mother()->pdgId());
-         GenPart_genPartIdxMother_.push_back(iter->pt()); //the above line causes a segmentation violation so I need a new way to define it
+     GenPart_genPartIdxMother_.push_back(iter->pt());
 	 n_GenPart ++;
     }
-	
+
+    n_GenJetAK4 = 0; //added by August
+    for (auto iter = GenJetAK4H->begin(); iter != GenJetAK4H->end(); ++iter) {
+	 GenJetAK4_pt_.push_back(iter->pt());
+	 GenJetAK4_eta_.push_back(iter->eta());
+	 GenJetAK4_phi_.push_back(iter->phi());
+	 GenJetAK4_m_.push_back(iter->mass());
+	 n_GenJetAK4 ++;
+    }
+
+    n_GenJetAK4NoNu = 0; //added by August
+    for (auto iter = GenJetAK4NoNuH->begin(); iter != GenJetAK4NoNuH->end(); ++iter) {
+	 GenJetAK4NoNu_pt_.push_back(iter->pt());
+	 GenJetAK4NoNu_eta_.push_back(iter->eta());
+	 GenJetAK4NoNu_phi_.push_back(iter->phi());
+	 GenJetAK4NoNu_m_.push_back(iter->mass());
+	 n_GenJetAK4NoNu ++;
+    }
+
+    n_GenJetAK8 = 0; //added by August
+    for (auto iter = GenJetAK8H->begin(); iter != GenJetAK8H->end(); ++iter) {
+	 GenJetAK8_pt_.push_back(iter->pt());
+	 GenJetAK8_eta_.push_back(iter->eta());
+	 GenJetAK8_phi_.push_back(iter->phi());
+	 GenJetAK8_m_.push_back(iter->mass());
+	 n_GenJetAK8 ++;
+    }
 
     n_pho = 0;
     for (auto iter = photonsH->begin(); iter != photonsH->end(); ++iter) {
@@ -1071,6 +1157,18 @@ void ScoutingNanoAOD::clearVars(){
     GenPart_eta_.clear();
     GenPart_phi_.clear();
     GenPart_m_.clear();
+    GenJetAK4_pt_.clear(); //added by August
+    GenJetAK4_eta_.clear();
+    GenJetAK4_phi_.clear();
+    GenJetAK4_m_.clear();
+    GenJetAK4NoNu_pt_.clear(); //added by August
+    GenJetAK4NoNu_eta_.clear();
+    GenJetAK4NoNu_phi_.clear();
+    GenJetAK4NoNu_m_.clear();
+    GenJetAK8_pt_.clear(); //added by August
+    GenJetAK8_eta_.clear();
+    GenJetAK8_phi_.clear();
+    GenJetAK8_m_.clear();
     GenPart_statusFlags_.clear();
     GenPart_pdgId_.clear();
     GenPart_genPartIdxMother_.clear();
