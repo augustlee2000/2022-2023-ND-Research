@@ -826,10 +826,10 @@ void ScoutingNanoAOD::analyze(const edm::Event& iEvent, const edm::EventSetup& i
 	 GenPart_eta_.push_back(iter->eta());
 	 GenPart_phi_.push_back(iter->phi());
 	 GenPart_m_.push_back(iter->mass());
-	 GenPart_statusFlags_.push_back(iter->status());
-	 GenPart_pdgId_.push_back(iter->pdgId());
+	 GenPart_statusFlags_.push_back(iter->status()); //these are not filling
+	 GenPart_pdgId_.push_back(iter->pdgId()); //this is also not filling
 	 //GenPart_genPartIdxMother_.push_back(iter->mother()->pdgId());
-     GenPart_genPartIdxMother_.push_back(iter->pt());
+         GenPart_genPartIdxMother_.push_back(iter->pt()); //the above line causes a segmentation violation so I need a new way to define it
 	 n_GenPart ++;
     }
 	
