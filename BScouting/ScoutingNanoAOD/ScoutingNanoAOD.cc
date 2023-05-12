@@ -41,6 +41,8 @@
 #include "DataFormats/Common/interface/TriggerResults.h"
 #include "DataFormats/HLTReco/interface/TriggerEvent.h"
 
+#include "DataFormats/JetReco/interface/GenJet.h"
+
 #include "DataFormats/Scouting/interface/Run3ScoutingElectron.h"
 #include "DataFormats/Scouting/interface/Run3ScoutingPhoton.h"
 #include "DataFormats/Scouting/interface/Run3ScoutingPFJet.h"
@@ -128,7 +130,7 @@ private:
     virtual void clearVars();
 
     const edm::EDGetTokenT<std::vector<Run3ScoutingMuon> >      muonsToken;
-    const edm::EDGetTokenT<std::vector<double>  >      partonToken; //added by August  
+    const edm::EDGetTokenT<std::vector<reco::GenJet>  >      partonToken; //added by August  
     const edm::EDGetTokenT<std::vector<Run3ScoutingElectron> >  	electronsToken;
     const edm::EDGetTokenT<std::vector<Run3ScoutingPhoton> >  	photonsToken;
     const edm::EDGetTokenT<std::vector<Run3ScoutingParticle> >  	pfcandsToken;
@@ -262,7 +264,7 @@ private:
     vector<vector<Int_t> > Muon_vtxIndx_;
 
     //Parton added by August
-    UInt_t n_GenPart_;
+    UInt_t n_GenPart;
     vector<Float_t> GenPart_pt_;
     vector<Float_t> GenPart_eta_;
     vector<Float_t> GenPart_phi_;
@@ -390,7 +392,7 @@ private:
 
 ScoutingNanoAOD::ScoutingNanoAOD(const edm::ParameterSet& iConfig): 
     muonsToken               (consumes<std::vector<Run3ScoutingMuon> >             (iConfig.getParameter<edm::InputTag>("muons"))),
-    partonToken               (consumes<std::vector<reco::GenJet> >             (iConfig.getParameter<edm::InputTag>("ak4GenJets"))), //added by August
+    partonToken               (consumes<std::vector<reco::GenJet> >             (iConfig.getParameter<edm::InputTag>("AK4"))), //added by August
     electronsToken           (consumes<std::vector<Run3ScoutingElectron> >         (iConfig.getParameter<edm::InputTag>("electrons"))), 
     photonsToken           (consumes<std::vector<Run3ScoutingPhoton> >         (iConfig.getParameter<edm::InputTag>("photons"))), 
     pfcandsToken             (consumes<std::vector<Run3ScoutingParticle> >         (iConfig.getParameter<edm::InputTag>("pfcands"))), 
@@ -520,7 +522,7 @@ ScoutingNanoAOD::ScoutingNanoAOD(const edm::ParameterSet& iConfig):
     tree->Branch("Muon_vtxIndx", &Muon_vtxIndx_ );
 	    
     //GenPart added by August 
-    tree->Branch("n_GenPart", &n_GenPart_);
+    tree->Branch("n_GenPart", &n_GenPart);
     tree->Branch("GenPart_pt", &GenPart_pt_);
     tree->Branch("GenPart_eta", &GenPart_eta_);
     tree->Branch("GenPart_phi", &GenPart_phi_);
@@ -823,10 +825,11 @@ void ScoutingNanoAOD::analyze(const edm::Event& iEvent, const edm::EventSetup& i
 	 GenPart_pt_.push_back(iter->pt());
 	 GenPart_eta_.push_back(iter->eta());
 	 GenPart_phi_.push_back(iter->phi());
-	 GenPart_m_.push_back(iter->m());
-	 GenPart_statusFlags_.push_back(iter->statusFlags());
+	 GenPart_m_.push_back(iter->mass());
+	 GenPart_statusFlags_.push_back(iter->status());
 	 GenPart_pdgId_.push_back(iter->pdgId());
-	 GenPart_genPartIdxMother_.push_back(iter->genPartIdxMother());
+	 //GenPart_genPartIdxMother_.push_back(iter->mother()->pdgId());
+     GenPart_genPartIdxMother_.push_back(iter->pt());
 	 n_GenPart ++;
     }
 	
