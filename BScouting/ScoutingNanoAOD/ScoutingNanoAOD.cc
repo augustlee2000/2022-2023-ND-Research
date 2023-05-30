@@ -44,6 +44,8 @@
 #include "DataFormats/JetReco/interface/GenJet.h"
 #include "DataFormats/HepMCCandidate/interface/GenParticle.h"
 
+//#include "PhysicsTools/NanoAOD/python/genparticles_cff.py"
+
 #include "DataFormats/Scouting/interface/Run3ScoutingElectron.h"
 #include "DataFormats/Scouting/interface/Run3ScoutingPhoton.h"
 #include "DataFormats/Scouting/interface/Run3ScoutingPFJet.h"
@@ -275,7 +277,7 @@ private:
     vector<Float_t> GenPart_m_;
     vector<Float_t> GenPart_statusFlags_;
     vector<Float_t> GenPart_pdgId_;
-    vector<Float_t> GenPart_genPartIdxMother_;
+    vector<Int_t> GenPart_genPartIdxMother_;
 
     //I for sure will have to add some stuff but should not be a huge deal
     //Ak4GenJets
@@ -888,13 +890,18 @@ void ScoutingNanoAOD::analyze(const edm::Event& iEvent, const edm::EventSetup& i
 	 GenPart_m_.push_back(iter->mass());
 	 GenPart_statusFlags_.push_back(iter->status());
 	 GenPart_pdgId_.push_back(iter->pdgId());
-	 //GenPart_genPartIdxMother_.push_back(iter->mother()->pdgId());
-     GenPart_genPartIdxMother_.push_back(iter->pt());
+     int n_mothers = iter->numberOfMothers();
+     if(n_mothers > 0){
+        GenPart_genPartIdxMother_.push_back(iter->mother()->pdgId());
+     }
+     else{
+        GenPart_genPartIdxMother_.push_back(99);
+     }
 	 n_GenPart ++;
     }
 
     n_GenJetAK4 = 0; //added by August
-    for (auto iter = GenJetAK4H->begin(); iter != GenJetAK4H->end(); ++iter) {
+    for (auto iter = GenJetAK4H->begin(); iter !=GenJetAK4H->end(); ++iter) {
 	 GenJetAK4_pt_.push_back(iter->pt());
 	 GenJetAK4_eta_.push_back(iter->eta());
 	 GenJetAK4_phi_.push_back(iter->phi());
