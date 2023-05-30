@@ -1,5 +1,6 @@
 import FWCore.ParameterSet.Config as cms
-
+from PhysicsTools.NanoAOD.genparticles_cff import *
+from PhysicsTools.NanoAOD.nanogen_cff import *
 # Set parameters externally
 from FWCore.ParameterSet.VarParsing import VarParsing
 params = VarParsing('analysis')
@@ -85,8 +86,9 @@ process.options = cms.untracked.PSet(
     #SkipEvent = cms.untracked.vstring('ProductNotFound')
 )
 
+
 # How many events to process
-process.maxEvents = cms.untracked.PSet( input = cms.untracked.int32(params.maxEvents) )
+process.maxEvents = cms.untracked.PSet( input = cms.untracked.int32(params.maxEvents) ) #params.maxEvents
 
 # Input EDM files
 process.source = cms.Source("PoolSource",
@@ -133,6 +135,11 @@ process.gentree = cms.EDAnalyzer("LHEWeightsTreeMaker",
 #L1Info = ['L1_DoubleMu_12_5', 'L1_DoubleMu_15_7', 'L1_HTT200er', 'L1_HTT255er', 'L1_HTT280er', 'L1_HTT320er', 'L1_HTT360er', 'L1_ETT2000', 'L1_HTT400er', 'L1_HTT450er', 'L1_SingleJet180', 'L1_SingleJet200', 'L1_DoubleJet30er2p5_Mass_Min300_dEta_Max1p5', 'L1_DoubleJet30er2p5_Mass_Min330_dEta_Max1p5', 'L1_DoubleJet30er2p5_Mass_Min360_dEta_Max1p5', 'L1_DoubleMu4p5er2p0_SQ_OS_Mass_Min7', 'L1_DoubleMu4_SQ_OS_dR_Max1p2', 'L1_SingleEG36er2p5', 'L1_SingleLooseIsoEG28er2p1', 'L1_SingleEG8er2p5', 'L1_SingleEG10er2p5', 'L1_SingleEG15er2p5', 'L1_SingleEG26er2p5', 'L1_SingleEG28_FWD2p5', 'L1_DoubleEG4_er1p2_dR_Max0p9', 'L1_DoubleEG4p5_er1p2_dR_Max0p9', 'L1_DoubleEG5_er1p2_dR_Max0p9', 'L1_DoubleEG5p5_er1p2_dR_Max0p8', 'L1_DoubleEG7_er1p2_dR_Max0p8', 'L1_DoubleEG7p5_er1p2_dR_Max0p7', 'L1_DoubleEG_15_10_er2p5', 'L1_DoubleEG_20_10_er2p5', 'L1_DoubleEG_22_10_er2p5', 'L1_DoubleEG_25_12_er2p5', 'L1_DoubleEG_25_14_er2p5', 'L1_DoubleEG_27_14_er2p5', 'L1_DoubleEG_LooseIso22_12_er2p5', 'L1_DoubleEG_LooseIso25_12_er2p5', 'L1_TripleEG_18_17_8_er2p5', 'L1_TripleEG_18_18_12_er2p5', 'L1_TripleEG16er2p5', 'L1_DoubleEG8er2p5_HTT300er']
 L1Info = ['L1_DoubleMu_12_5','L1_DoubleMu_15_7','L1_HTT200er','L1_HTT255er','L1_HTT280er','L1_HTT320er','L1_HTT360er','L1_ETT2000','L1_HTT400er','L1_HTT450er','L1_SingleJet180','L1_SingleJet200','L1_DoubleJet30er2p5_Mass_Min300_dEta_Max1p5','L1_DoubleJet30er2p5_Mass_Min330_dEta_Max1p5','L1_DoubleJet30er2p5_Mass_Min360_dEta_Max1p5','L1_DoubleMu4p5er2p0_SQ_OS_Mass_Min7','L1_DoubleMu4_SQ_OS_dR_Max1p2','L1_SingleEG36er2p5','L1_SingleLooseIsoEG28er2p1']
 
+# process.genParticlesMerged = cms.EDProducer("MergedGenParticleProducer",   I'm not sure why or how I added this line 
+#     inputPruned = cms.InputTag("prunedGenParticles"),
+#     inputPacked = cms.InputTag("packedGenParticles")
+# )
+
 # Make tree
 process.mmtree = cms.EDAnalyzer('ScoutingNanoAOD',
 
@@ -161,13 +168,16 @@ process.mmtree = cms.EDAnalyzer('ScoutingNanoAOD',
         displacedVertices  = cms.InputTag("hltScoutingMuonPacker","displacedVtx"),
         pfMet            = cms.InputTag("hltScoutingPFPacker","pfMetPt"),
         pfMetPhi         = cms.InputTag("hltScoutingPFPacker","pfMetPhi"),
-        rho         = cms.InputTag("hltScoutingPFPacker","rho"),
-    	GenParticle         = cms.InputTag("genParticles"),
-    	GenJetAK4         = cms.InputTag("ak4GenJets"),
-    	GenJetAK4NoNu         = cms.InputTag("ak4GenJetsNoNu"),
-    	GenJetAK8         = cms.InputTag("ak8GenJets"), 
+        rho         = cms.InputTag("hltScoutingPFPacker","rho"),    
+    GenParticle         = cms.InputTag("genParticles"),
+    GenJetAK4         = cms.InputTag("ak4GenJets"),
+    GenJetAK4NoNu         = cms.InputTag("ak4GenJetsNoNu"),
+    GenJetAK8         = cms.InputTag("ak8GenJets"),
     	#pileupinfo       = cms.InputTag("addPileupInfo"),
     	#geneventinfo     = cms.InputTag("generator"),
 
 )
+#process  = customizeNanoGEN(process) #this seems to enter the code but never wrote a new branch so I don't know what that is all about
+
+
 process.p = cms.Path(process.gtStage2Digis*process.mmtree)
