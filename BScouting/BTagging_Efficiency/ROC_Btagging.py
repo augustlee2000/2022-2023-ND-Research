@@ -75,6 +75,7 @@ def angle_sort(n1,n2,v1,v2):
     for i in range(len(ind)):
         ind[i].append(v1[ind[i][0]].DeltaR(v2[ind[i][1]]))  
     ind.sort(key=lambda x:x[2])
+    ind.sort(key=lambda x:x[0])
     return ind
 
 def difference(v1, v2, command):
@@ -129,7 +130,6 @@ def MET_eta(p_z,p_t):
 
 files = sys.argv[1]
 file1 = ROOT.TFile(files,"READ")
-
 dir = file1.Get("mmtree")
 tree = dir.Get("Events")
 
@@ -157,10 +157,10 @@ for i in range(len(CSV)):
     for ientry in range(tree.GetEntries()):
         tree.GetEntry(ientry)
         MyParticles = []
-        for gp in range(tree.nGenPart):
+        for gp in range(tree.n_GenPart):
             #if math.fabs(tree.GenPart_pdgId[gp]) in (1,2,3,4,5):# and tree.GenPart_status[gp] in (62,52):
-            if tree.GenPart_statusFlags[gp] == 4481 and math.fabs(tree.GenPart_pdgId[gp]) == 5 and math.fabs(tree.GenPart_pdgId[tree.GenPart_genPartIdxMother[gp]]) == 1000024:
-                MyParticles.append(vec_creator(tree.GenPart_pt[gp], tree.GenPart_eta[gp], tree.GenPart_phi[gp], tree.GenPart_m[tree.GenPart_genPartIdxMother[gp]]))
+            if tree.GenPart_StatusFlags[gp] ==23 and math.fabs(tree.GenPart_pdgId[gp]) == 5 and math.fabs(tree.GenPart_genPartIdxMother[gp]) == 6:
+                MyParticles.append(vec_creator(tree.GenPart_pt[gp], tree.GenPart_eta[gp], tree.GenPart_phi[gp], tree.GenPart_m[gp]))
 
         MyJets = [] #jets
         for j in range(tree.n_jet):
@@ -171,23 +171,24 @@ for i in range(len(CSV)):
         mj = len(MyJets)
         if mp  > 0:
             ind_s = angle_sort(mp,mj,MyParticles,MyJets)
-
-            for j in range(tree.n_jet):
-                if j == 0:
-                    if tree.Jet_csv[ind_s[j][1]] > CSV[i]:
-                        true_positive +=1
-                        hist_array_angle[0].Fill(ind_s[j][2])
+            for l in range(mp):
+                for j in range(tree.n_jet):
+                    j += tree.n_jet * l
+                    if j == tree.n_jet * l:
+                        if tree.Jet_csv[ind_s[j][1]] > CSV[i]:
+                            true_positive +=1
+                            hist_array_angle[0].Fill(ind_s[j][2])
+                        else:
+                            false_negative +=1
+                            hist_array_angle[3].Fill(ind_s[j][2])
                     else:
-                        false_negative +=1
-                        hist_array_angle[3].Fill(ind_s[j][2])
-                else:
-                    if tree.Jet_csv[ind_s[j][1]] > CSV[i]:
-                        false_positive +=1
-                        hist_array_angle[2].Fill(ind_s[j][2])
-                    else:
-                        true_negative +=1
-                        hist_array_angle[1].Fill(ind_s[j][2])
-    
+                        if tree.Jet_csv[ind_s[j][1]] > CSV[i]:
+                            false_positive +=1
+                            hist_array_angle[2].Fill(ind_s[j][2])
+                        else:
+                            true_negative +=1
+                            hist_array_angle[1].Fill(ind_s[j][2])
+        
     True_positive_rate = true_positive.sum() / (true_positive.sum() + false_negative.sum())
     False_positive_rate = false_positive.sum() / (false_positive.sum() + true_negative.sum())
 
