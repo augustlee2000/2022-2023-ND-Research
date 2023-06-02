@@ -36,7 +36,7 @@ def HardGet(e, L, H): # shorthand def for getting collection from event
 
 def GetDir(events,GL,GH):
     for event in events:
-        #if statement is only here because I am being super lazy and don't feel like remaking this event loop to go over only the first event
+        #for loop is only here because I am being super lazy and don't feel like figuring out how to get a single event from events
         event.getByLabel(GL,GH)
         GP = HardGet(event, GL, GH)
         print(dir(GP[0]))
@@ -57,7 +57,7 @@ GL = ("genParticles", "", "HLT")
 
 
 #This portion will get you all the variables that can be called!
-print(GetDir(events, GL, GH))
+GetDir(events, GL, GH)
 
 
 
