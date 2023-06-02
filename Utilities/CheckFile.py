@@ -35,15 +35,12 @@ def HardGet(e, L, H): # shorthand def for getting collection from event
         return False
 
 def GetDir(events,GL,GH):
-    N =0
     for event in events:
-        if N ==0: #if statement is only here because I am being super lazy and don't feel like remaking this event loop to go over only the first event
-            print(10*"=")
-            event.getByLabel(GL,GH)
-            GP = HardGet(event, GL, GH)
-            print(dir(GP[0]))
-            print(10*"=")
-            N +=1
+        #if statement is only here because I am being super lazy and don't feel like remaking this event loop to go over only the first event
+        event.getByLabel(GL,GH)
+        GP = HardGet(event, GL, GH)
+        print(dir(GP[0]))
+        break
 
 def Hist(events,GL,GH, variable,hist):
       for event in events:
