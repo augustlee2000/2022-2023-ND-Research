@@ -4,7 +4,7 @@ Instructions on how to run each file and their uses:
 
 # **CheckFile.py**
 
-This program is made to take a mini or aod root file and provided all the tree that your could possible need
+This program is made to take a mini or aod root file and provided all the trees that your could possible need
 ## Steps
 
 1) Launch up your favorite instance of CMSSW
