@@ -36,7 +36,7 @@ def HardGet(e, L, H): # shorthand def for getting collection from event
 
 def GetDir(events,GL,GH):
     for event in events:
-        #for loop is only here because I am being super lazy and don't feel like figuring out how to get a single event from events
+        #the loop is only here because I am being super lazy and don't feel like figuring out how to get a single event from events
         event.getByLabel(GL,GH)
         GP = HardGet(event, GL, GH)
         print(dir(GP[0]))
