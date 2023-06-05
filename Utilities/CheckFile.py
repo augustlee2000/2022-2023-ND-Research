@@ -56,7 +56,7 @@ GH = Handle("vector<reco::GenParticle>") #handle from the edmDump
 GL = ("genParticles", "", "HLT") #lable from the edmDump
 
 
-#This portion will get you all the variables that can be called!
+#This portion will print you all the variables that can be called for the given handle and label!
 GetDir(events, GL, GH)
 
 
@@ -64,7 +64,7 @@ GetDir(events, GL, GH)
 #This is a very fast and dirty way to get a histogram from the file if you don't have access to a TBrowswer or justing being lazy
 events = Events(files)
 
-colors=[ROOT.kBlue,ROOT.kRed, ROOT.kBlack, ROOT.kGreen]
+colors=[ROOT.kBlue,ROOT.kRed, ROOT.kBlack, ROOT.kGreen] #All of your basic histogram formating
 names = ["Eta"]
 x_starting = -6
 x_ending = 6
