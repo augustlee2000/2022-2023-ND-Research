@@ -52,8 +52,8 @@ def Hist(events,GL,GH, variable,hist):
 files = glob.glob( sys.argv[1] ) #+"*root"
 events = Events(files)
 print(files)
-GH = Handle("vector<reco::GenParticle>")
-GL = ("genParticles", "", "HLT")
+GH = Handle("vector<reco::GenParticle>") #handle from the edmDump
+GL = ("genParticles", "", "HLT") #lable from the edmDump
 
 
 #This portion will get you all the variables that can be called!
