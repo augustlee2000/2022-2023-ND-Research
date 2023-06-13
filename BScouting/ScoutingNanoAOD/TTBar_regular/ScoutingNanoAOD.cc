@@ -141,9 +141,9 @@ private:
     const edm::EDGetTokenT<std::vector<reco::Photon>  >  	photonsToken;
     const edm::EDGetTokenT<std::vector<reco::PFCandidate> >  	pfcandsToken;
     const edm::EDGetTokenT<std::vector<reco::PFJet>  >  	pfjetsToken;
-    const edm::EDGetTokenT<std::vector<Run3ScoutingTrack> >  	tracksToken;
-    const edm::EDGetTokenT<std::vector<Run3ScoutingVertex> >  	pvToken;
-    const edm::EDGetTokenT<std::vector<Run3ScoutingVertex> >  	dvToken;
+    const edm::EDGetTokenT<std::vector<reco::Track> >  	tracksToken;
+    const edm::EDGetTokenT<std::vector<reco::Vertex> >  	pvToken;
+    const edm::EDGetTokenT<std::vector<reco::Vertex> >  	dvToken;
     const edm::EDGetTokenT<double>  	rhoToken;
     const edm::EDGetTokenT<double>  	pfMetToken;
     const edm::EDGetTokenT<double>  	pfMetPhiToken;
@@ -429,9 +429,9 @@ ScoutingNanoAOD::ScoutingNanoAOD(const edm::ParameterSet& iConfig):
     photonsToken           (consumes<std::vector<reco::Photon>  >         (iConfig.getParameter<edm::InputTag>("photons"))), 
     pfcandsToken             (consumes<std::vector<reco::PFCandidate> >         (iConfig.getParameter<edm::InputTag>("pfcands"))), 
     pfjetsToken              (consumes<std::vector<reco::PFJet>  >            (iConfig.getParameter<edm::InputTag>("pfjets"))),
-    tracksToken              (consumes<std::vector<Run3ScoutingTrack> >            (iConfig.getParameter<edm::InputTag>("tracks"))), 
-    pvToken              (consumes<std::vector<Run3ScoutingVertex> >            (iConfig.getParameter<edm::InputTag>("primaryVertices"))), 
-    dvToken              (consumes<std::vector<Run3ScoutingVertex> >            (iConfig.getParameter<edm::InputTag>("displacedVertices"))), 
+    tracksToken              (consumes<std::vector<reco::Track> >            (iConfig.getParameter<edm::InputTag>("tracks"))), 
+    pvToken              (consumes<std::vector<reco::Vertex> >            (iConfig.getParameter<edm::InputTag>("primaryVertices"))), 
+    dvToken              (consumes<std::vector<reco::Vertex> >            (iConfig.getParameter<edm::InputTag>("displacedVertices"))), 
     rhoToken             (consumes<double>(iConfig.getParameter<edm::InputTag>("rho"))),
     pfMetToken             (consumes<double>(iConfig.getParameter<edm::InputTag>("pfMet"))),
     pfMetPhiToken             (consumes<double>(iConfig.getParameter<edm::InputTag>("pfMetPhi"))),
@@ -746,13 +746,13 @@ void ScoutingNanoAOD::analyze(const edm::Event& iEvent, const edm::EventSetup& i
     Handle<vector<reco::PFJet>  > pfcandsH;
     iEvent.getByToken(pfcandsToken, pfcandsH);
 
-    Handle<vector<Run3ScoutingTrack> > tracksH;
+    Handle<vector<reco::Track> > tracksH;
     iEvent.getByToken(tracksToken, tracksH);
 
-    Handle<vector<Run3ScoutingVertex> > pvH;
+    Handle<vector<reco::Vertex> > pvH;
     iEvent.getByToken(pvToken, pvH);
 
-    Handle<vector<Run3ScoutingVertex> > dvH;
+    Handle<vector<reco::Vertex> > dvH;
     iEvent.getByToken(dvToken, dvH);
 
     Handle<double> rhoH;
