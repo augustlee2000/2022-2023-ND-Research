@@ -132,15 +132,15 @@ private:
     virtual void endLuminosityBlock(edm::LuminosityBlock const&, edm::EventSetup const&) override;
     virtual void clearVars();
 
-    const edm::EDGetTokenT<std::vector<Run3ScoutingMuon> >      muonsToken;
+    const edm::EDGetTokenT<std::vector<reco::Muon> >      muonsToken;
     const edm::EDGetTokenT<std::vector<reco::GenParticle>  >      partonToken; //added by August 
     const edm::EDGetTokenT<std::vector<reco::GenJet>  >      ak4jetToken;
     const edm::EDGetTokenT<std::vector<reco::GenJet>  >      ak4jetNoNuToken;
     const edm::EDGetTokenT<std::vector<reco::GenJet>  >      ak8jetToken; 
-    const edm::EDGetTokenT<std::vector<Run3ScoutingElectron> >  	electronsToken;
-    const edm::EDGetTokenT<std::vector<Run3ScoutingPhoton> >  	photonsToken;
-    const edm::EDGetTokenT<std::vector<Run3ScoutingParticle> >  	pfcandsToken;
-    const edm::EDGetTokenT<std::vector<Run3ScoutingPFJet> >  	pfjetsToken;
+    const edm::EDGetTokenT<std::vector<reco::GsfElectron>  >  	electronsToken;
+    const edm::EDGetTokenT<std::vector<reco::Photon>  >  	photonsToken;
+    const edm::EDGetTokenT<std::vector<reco::PFCandidate> >  	pfcandsToken;
+    const edm::EDGetTokenT<std::vector<reco::PFJet>  >  	pfjetsToken;
     const edm::EDGetTokenT<std::vector<Run3ScoutingTrack> >  	tracksToken;
     const edm::EDGetTokenT<std::vector<Run3ScoutingVertex> >  	pvToken;
     const edm::EDGetTokenT<std::vector<Run3ScoutingVertex> >  	dvToken;
@@ -420,15 +420,15 @@ private:
 };
 
 ScoutingNanoAOD::ScoutingNanoAOD(const edm::ParameterSet& iConfig): 
-    muonsToken               (consumes<std::vector<Run3ScoutingMuon> >             (iConfig.getParameter<edm::InputTag>("muons"))),
+    muonsToken               (consumes<std::vector<reco::Muon> >             (iConfig.getParameter<edm::InputTag>("muons"))),
     partonToken               (consumes<std::vector<reco::GenParticle> >             (iConfig.getParameter<edm::InputTag>("GenParticle"))), //added by August
     ak4jetToken               (consumes<std::vector<reco::GenJet> >             (iConfig.getParameter<edm::InputTag>("GenJetAK4"))),
     ak4jetNoNuToken               (consumes<std::vector<reco::GenJet> >             (iConfig.getParameter<edm::InputTag>("GenJetAK4NoNu"))),
     ak8jetToken               (consumes<std::vector<reco::GenJet> >             (iConfig.getParameter<edm::InputTag>("GenJetAK8"))), 
-    electronsToken           (consumes<std::vector<Run3ScoutingElectron> >         (iConfig.getParameter<edm::InputTag>("electrons"))), 
-    photonsToken           (consumes<std::vector<Run3ScoutingPhoton> >         (iConfig.getParameter<edm::InputTag>("photons"))), 
-    pfcandsToken             (consumes<std::vector<Run3ScoutingParticle> >         (iConfig.getParameter<edm::InputTag>("pfcands"))), 
-    pfjetsToken              (consumes<std::vector<Run3ScoutingPFJet> >            (iConfig.getParameter<edm::InputTag>("pfjets"))),
+    electronsToken           (consumes<std::vector<reco::GsfElectron>  >         (iConfig.getParameter<edm::InputTag>("electrons"))), 
+    photonsToken           (consumes<std::vector<reco::Photon>  >         (iConfig.getParameter<edm::InputTag>("photons"))), 
+    pfcandsToken             (consumes<std::vector<reco::PFCandidate> >         (iConfig.getParameter<edm::InputTag>("pfcands"))), 
+    pfjetsToken              (consumes<std::vector<reco::PFJet>  >            (iConfig.getParameter<edm::InputTag>("pfjets"))),
     tracksToken              (consumes<std::vector<Run3ScoutingTrack> >            (iConfig.getParameter<edm::InputTag>("tracks"))), 
     pvToken              (consumes<std::vector<Run3ScoutingVertex> >            (iConfig.getParameter<edm::InputTag>("primaryVertices"))), 
     dvToken              (consumes<std::vector<Run3ScoutingVertex> >            (iConfig.getParameter<edm::InputTag>("displacedVertices"))), 
@@ -719,10 +719,10 @@ void ScoutingNanoAOD::analyze(const edm::Event& iEvent, const edm::EventSetup& i
     using namespace fastjet;
     using namespace fastjet::contrib;
     
-    Handle<vector<Run3ScoutingElectron> > electronsH;
+    Handle<vector<reco::GsfElectron>  > electronsH;
     iEvent.getByToken(electronsToken, electronsH);
 
-    Handle<vector<Run3ScoutingMuon> > muonsH;
+    Handle<vector<reco::Muon> > muonsH;
     iEvent.getByToken(muonsToken, muonsH);
 	
     Handle<vector<reco::GenParticle> > partonH; //added by August
@@ -737,13 +737,13 @@ void ScoutingNanoAOD::analyze(const edm::Event& iEvent, const edm::EventSetup& i
     Handle<vector<reco::GenJet> > GenJetAK8H; //added by August
     iEvent.getByToken(ak8jetToken, GenJetAK8H);
 
-    Handle<vector<Run3ScoutingPhoton> > photonsH;
+    Handle<vector<reco::Photon>  > photonsH;
     iEvent.getByToken(photonsToken, photonsH);
 
-    Handle<vector<Run3ScoutingPFJet> > pfjetsH;
+    Handle<vector<reco::PFCandidate> > pfjetsH;
     iEvent.getByToken(pfjetsToken, pfjetsH);
     
-    Handle<vector<Run3ScoutingParticle> > pfcandsH;
+    Handle<vector<reco::PFJet>  > pfcandsH;
     iEvent.getByToken(pfcandsToken, pfcandsH);
 
     Handle<vector<Run3ScoutingTrack> > tracksH;
