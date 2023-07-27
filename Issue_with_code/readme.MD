@@ -8,4 +8,4 @@ I followed almost exactly the GitHub the only differece is that I added muon inf
 
 ## Using weaver 
 
-This is where the problems starts. I now take the two different .root files and run them locally using this command script after some issues with gpu, this method is suppose to not need a gpu.
+This is where the problems starts. I now take the two different .root files and run them locally using this command script (train_test.sh) after some issues with gpu, this method is suppose to not need a gpu. I should note that a active conda enviroment is need to run these commands, I followed this [GitHub](https://github.com/hqucms/weaver-core/#set-up-your-environment) to set up my environment.
