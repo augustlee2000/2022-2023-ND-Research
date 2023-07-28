@@ -1,0 +1,171 @@
+Using auto-generated model prefix output/ak4_flavour_20230728-162139_flavour_ranger_lr0.005_batch128/net
+[2023-07-28 16:21:39,079] INFO: args:
+ - ('regression_mode', False)
+ - ('data_config', '/afs/cern.ch/user/a/aulee/BScouting/CMSSW_13_1_0_pre1/src/Run3ScoutingJetTagging/Training/AK4/flavour/data/flavour.yaml')
+ - ('extra_selection', None)
+ - ('extra_test_selection', None)
+ - ('data_train', ['test_TTBAR.root'])
+ - ('data_val', [])
+ - ('data_test', [])
+ - ('data_fraction', 1)
+ - ('file_fraction', 1)
+ - ('fetch_by_files', False)
+ - ('fetch_step', 0.01)
+ - ('in_memory', False)
+ - ('train_val_split', 0.8)
+ - ('no_remake_weights', False)
+ - ('demo', True)
+ - ('lr_finder', None)
+ - ('tensorboard', None)
+ - ('tensorboard_custom_fn', None)
+ - ('network_config', '/afs/cern.ch/user/a/aulee/BScouting/CMSSW_13_1_0_pre1/src/Run3ScoutingJetTagging/Training/AK4/flavour/networks/flavour.py')
+ - ('network_option', [])
+ - ('model_prefix', 'output/ak4_flavour_20230728-162139_flavour_ranger_lr0.005_batch128/net')
+ - ('load_model_weights', None)
+ - ('exclude_model_weights', None)
+ - ('num_epochs', 1)
+ - ('steps_per_epoch', None)
+ - ('steps_per_epoch_val', None)
+ - ('samples_per_epoch', None)
+ - ('samples_per_epoch_val', None)
+ - ('optimizer', 'ranger')
+ - ('optimizer_option', [])
+ - ('lr_scheduler', 'flat+decay')
+ - ('warmup_steps', 0)
+ - ('load_epoch', None)
+ - ('start_lr', 0.005)
+ - ('batch_size', 128)
+ - ('use_amp', False)
+ - ('gpus', '')
+ - ('predict_gpus', '')
+ - ('num_workers', 1)
+ - ('predict', False)
+ - ('predict_output', None)
+ - ('export_onnx', None)
+ - ('onnx_opset', 15)
+ - ('io_test', False)
+ - ('copy_inputs', False)
+ - ('log', 'output/ak4_flavour_20230728-162139_flavour_ranger_lr0.005_batch128.log')
+ - ('print', False)
+ - ('profile', False)
+ - ('backend', None)
+ - ('cross_validation', None)
+ - ('_auto_model_name', '20230728-162139_flavour_ranger_lr0.005_batch128')
+ - ('local_rank', None)
+[2023-07-28 16:21:39,079] INFO: Running in classification mode
+[2023-07-28 16:21:51,114] INFO: Using 1 files for training, range: (0, 0.8)
+[2023-07-28 16:21:51,114] INFO: Using 1 files for validation, range: (0.8, 1)
+[2023-07-28 16:21:51,114] INFO: ['test_TTBAR.root']
+[2023-07-28 16:21:51,114] INFO: ['test_TTBAR.root']
+[2023-07-28 16:21:51,129] INFO: preprocess config: {'method': 'manual', 'data_fraction': None, 'params': None}
+[2023-07-28 16:21:51,129] INFO: selection: (np.abs(fj_eta)<2.5) & (fj_pt>15) & (fj_pt<1000) & (event_no%7!=0) & ( (fj_hadrflav>0) | ((fj_hadrflav==0) & (np.abs(fj_partflav)!=4) & (np.abs(fj_partflav)!=5)) )
+[2023-07-28 16:21:51,129] INFO: test_time_selection: (np.abs(fj_eta)<2.5) & (fj_pt>15) & (fj_pt<1000) & (event_no%7==0)
+[2023-07-28 16:21:51,129] INFO: var_funcs:
+ - ('pfcand_mask', 'ak.ones_like(pfcand_etarel)')
+ - ('label_b', '(fj_nb==1)')
+ - ('label_bb', '(fj_nb>1)')
+ - ('label_c', '(fj_nb==0) & (fj_nc==1)')
+ - ('label_cc', '(fj_nb==0) & (fj_nc>1)')
+ - ('label_uds', '(fj_hadrflav==0) & (np.abs(fj_partflav)>0) & (np.abs(fj_partflav)<4)')
+ - ('label_g', '(fj_hadrflav==0) & (fj_partflav==21)')
+ - ('label_undef', '(fj_hadrflav==0) & (fj_partflav==0)')
+ - ('label_catB', '(fj_hadrflav==5)')
+ - ('label_catC', '(fj_hadrflav==4)')
+ - ('_label_', 'np.argmax(np.stack([ak.to_numpy(label_b),ak.to_numpy(label_bb),ak.to_numpy(label_c),ak.to_numpy(label_cc),ak.to_numpy(label_uds),ak.to_numpy(label_g),ak.to_numpy(label_undef),ak.to_numpy(label_catB),ak.to_numpy(label_catC)], axis=1), axis=1)')
+ - ('_labelcheck_', 'np.sum(np.stack([ak.to_numpy(label_b),ak.to_numpy(label_bb),ak.to_numpy(label_c),ak.to_numpy(label_cc),ak.to_numpy(label_uds),ak.to_numpy(label_g),ak.to_numpy(label_undef),ak.to_numpy(label_catB),ak.to_numpy(label_catC)], axis=1), axis=1)')
+[2023-07-28 16:21:51,129] INFO: input_names: ('pf_points', 'pf_features', 'pf_mask')
+[2023-07-28 16:21:51,129] INFO: input_dicts:
+ - ('pf_points', ['pfcand_etarel', 'pfcand_phirel'])
+ - ('pf_features', ['pfcand_pt_log_nopuppi', 'pfcand_e_log_nopuppi', 'pfcand_etarel', 'pfcand_phirel', 'pfcand_abseta', 'pfcand_charge', 'pfcand_lostInnerHits', 'pfcand_normchi2', 'pfcand_quality', 'pfcand_dz', 'pfcand_dzsig', 'pfcand_dxy', 'pfcand_dxysig', 'pfcand_btagEtaRel', 'pfcand_btagPtRatio', 'pfcand_btagPParRatio'])
+ - ('pf_mask', ['pfcand_mask'])
+[2023-07-28 16:21:51,129] INFO: input_shapes:
+ - ('pf_points', (-1, 2, 50))
+ - ('pf_features', (-1, 16, 50))
+ - ('pf_mask', (-1, 1, 50))
+[2023-07-28 16:21:51,129] INFO: preprocess_params:
+ - ('pfcand_etarel', {'length': 50, 'pad_mode': 'constant', 'center': None, 'scale': 1, 'min': -5, 'max': 5, 'pad_value': 0})
+ - ('pfcand_phirel', {'length': 50, 'pad_mode': 'constant', 'center': None, 'scale': 1, 'min': -5, 'max': 5, 'pad_value': 0})
+ - ('pfcand_pt_log_nopuppi', {'length': 50, 'pad_mode': 'constant', 'center': 0.8, 'scale': 0.7, 'min': -5, 'max': 5, 'pad_value': 0})
+ - ('pfcand_e_log_nopuppi', {'length': 50, 'pad_mode': 'constant', 'center': 1.2, 'scale': 0.6, 'min': -5, 'max': 5, 'pad_value': 0})
+ - ('pfcand_abseta', {'length': 50, 'pad_mode': 'constant', 'center': 0.8, 'scale': 1.2, 'min': -5, 'max': 5, 'pad_value': 0})
+ - ('pfcand_charge', {'length': 50, 'pad_mode': 'constant', 'center': None, 'scale': 1, 'min': -5, 'max': 5, 'pad_value': 0})
+ - ('pfcand_lostInnerHits', {'length': 50, 'pad_mode': 'constant', 'center': None, 'scale': 1, 'min': -5, 'max': 5, 'pad_value': 0})
+ - ('pfcand_normchi2', {'length': 50, 'pad_mode': 'constant', 'center': 5, 'scale': 0.2, 'min': -5, 'max': 5, 'pad_value': 0})
+ - ('pfcand_quality', {'length': 50, 'pad_mode': 'constant', 'center': 0, 'scale': 0.2, 'min': -5, 'max': 5, 'pad_value': 0})
+ - ('pfcand_dz', {'length': 50, 'pad_mode': 'constant', 'center': 0, 'scale': 150, 'min': -5, 'max': 5, 'pad_value': 0})
+ - ('pfcand_dzsig', {'length': 50, 'pad_mode': 'constant', 'center': 0, 'scale': 0.7, 'min': -5, 'max': 5, 'pad_value': 0})
+ - ('pfcand_dxy', {'length': 50, 'pad_mode': 'constant', 'center': 0, 'scale': 270, 'min': -5, 'max': 5, 'pad_value': 0})
+ - ('pfcand_dxysig', {'length': 50, 'pad_mode': 'constant', 'center': 1.1, 'scale': 1, 'min': -5, 'max': 5, 'pad_value': 0})
+ - ('pfcand_btagEtaRel', {'length': 50, 'pad_mode': 'constant', 'center': 2.1, 'scale': 0.5, 'min': -5, 'max': 5, 'pad_value': 0})
+ - ('pfcand_btagPtRatio', {'length': 50, 'pad_mode': 'constant', 'center': 0, 'scale': 1, 'min': -5, 'max': 5, 'pad_value': 0})
+ - ('pfcand_btagPParRatio', {'length': 50, 'pad_mode': 'constant', 'center': 0, 'scale': 1, 'min': -5, 'max': 5, 'pad_value': 0})
+ - ('pfcand_mask', {'length': 50, 'pad_mode': 'constant', 'center': None, 'scale': 1, 'min': -5, 'max': 5, 'pad_value': 0})
+[2023-07-28 16:21:51,129] INFO: label_names: ('_label_',)
+[2023-07-28 16:21:51,130] INFO: observer_names: ('event_no', 'fj_pt', 'fj_eta', 'fj_phi', 'fj_hadrflav', 'fj_partflav', 'fj_nb', 'fj_nc', 'fj_mass')
+[2023-07-28 16:21:51,130] INFO: monitor_variables: ()
+[2023-07-28 16:21:51,130] INFO: reweight_method: flat
+[2023-07-28 16:21:51,130] INFO: reweight_basewgt: None
+[2023-07-28 16:21:51,130] INFO: reweight_branches: ('fj_pt', 'fj_eta')
+[2023-07-28 16:21:51,130] INFO: reweight_bins: ([15, 20, 26, 35, 46, 61, 80, 106, 141, 186, 247, 326, 432, 571, 756, 1000], [-2.5, -2.0, -1.5, -1.0, -0.5, 0.0, 0.5, 1.0, 1.5, 2.0, 2.5])
+[2023-07-28 16:21:51,130] INFO: reweight_classes: ('label_catB', 'label_catC', 'label_uds', 'label_g', 'label_undef')
+[2023-07-28 16:21:51,130] INFO: class_weights: [1, 1, 2.5, 5, 0.15]
+[2023-07-28 16:21:51,130] INFO: reweight_threshold: 15
+[2023-07-28 16:21:51,130] INFO: reweight_discard_under_overflow: True
+100%|██████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████| 1/1 [00:01<00:00,  1.01s/it]
+Traceback (most recent call last):
+  File "/afs/cern.ch/user/a/aulee/.conda/envs/weaver/lib/python3.10/site-packages/awkward/highlevel.py", line 946, in __getitem__
+    prepare_layout(self._layout[where]), self._behavior, allow_other=True
+  File "/afs/cern.ch/user/a/aulee/.conda/envs/weaver/lib/python3.10/site-packages/awkward/contents/content.py", line 525, in __getitem__
+    return self._getitem(where)
+  File "/afs/cern.ch/user/a/aulee/.conda/envs/weaver/lib/python3.10/site-packages/awkward/contents/content.py", line 542, in _getitem
+    return self._getitem_field(where)
+  File "/afs/cern.ch/user/a/aulee/.conda/envs/weaver/lib/python3.10/site-packages/awkward/contents/recordarray.py", line 473, in _getitem_field
+    return self.content(where)
+  File "/afs/cern.ch/user/a/aulee/.conda/envs/weaver/lib/python3.10/site-packages/awkward/contents/recordarray.py", line 412, in content
+    out = self.form_cls.content(self, index_or_field)
+  File "/afs/cern.ch/user/a/aulee/.conda/envs/weaver/lib/python3.10/site-packages/awkward/forms/recordform.py", line 143, in content
+    index = self.field_to_index(index_or_field)
+  File "/afs/cern.ch/user/a/aulee/.conda/envs/weaver/lib/python3.10/site-packages/awkward/contents/recordarray.py", line 406, in field_to_index
+    return self.form_cls.field_to_index(self, field)
+  File "/afs/cern.ch/user/a/aulee/.conda/envs/weaver/lib/python3.10/site-packages/awkward/forms/recordform.py", line 122, in field_to_index
+    raise ak._errors.FieldNotFoundError(
+awkward._errors.FieldNotFoundError: no field 'fj_eta' in record with 1 fields
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/afs/cern.ch/user/a/aulee/.conda/envs/weaver/bin/weaver", line 8, in <module>
+    sys.exit(main())
+  File "/afs/cern.ch/user/a/aulee/.conda/envs/weaver/lib/python3.10/site-packages/weaver/train.py", line 931, in main
+    _main(args)
+  File "/afs/cern.ch/user/a/aulee/.conda/envs/weaver/lib/python3.10/site-packages/weaver/train.py", line 715, in _main
+    train_loader, val_loader, data_config, train_input_names, train_label_names = train_load(args)
+  File "/afs/cern.ch/user/a/aulee/.conda/envs/weaver/lib/python3.10/site-packages/weaver/train.py", line 235, in train_load
+    train_data = SimpleIterDataset(train_file_dict, args.data_config, for_training=True,
+  File "/afs/cern.ch/user/a/aulee/.conda/envs/weaver/lib/python3.10/site-packages/weaver/utils/dataset.py", line 347, in __init__
+    self._data_config = w.produce(data_config_autogen_file)
+  File "/afs/cern.ch/user/a/aulee/.conda/envs/weaver/lib/python3.10/site-packages/weaver/utils/data/preprocess.py", line 284, in produce
+    table = self.read_file(self._filelist)
+  File "/afs/cern.ch/user/a/aulee/.conda/envs/weaver/lib/python3.10/site-packages/weaver/utils/data/preprocess.py", line 187, in read_file
+    table = _apply_selection(table, self._data_config.selection, funcs=self._data_config.var_funcs)
+  File "/afs/cern.ch/user/a/aulee/.conda/envs/weaver/lib/python3.10/site-packages/weaver/utils/data/preprocess.py", line 17, in _apply_selection
+    selected = ak.values_astype(_eval_expr(selection, table), 'bool')
+  File "/afs/cern.ch/user/a/aulee/.conda/envs/weaver/lib/python3.10/site-packages/weaver/utils/data/tools.py", line 134, in _eval_expr
+    tmp = {k: table[k] for k in _get_variable_names(expr)}
+  File "/afs/cern.ch/user/a/aulee/.conda/envs/weaver/lib/python3.10/site-packages/weaver/utils/data/tools.py", line 134, in <dictcomp>
+    tmp = {k: table[k] for k in _get_variable_names(expr)}
+  File "/afs/cern.ch/user/a/aulee/.conda/envs/weaver/lib/python3.10/site-packages/awkward/highlevel.py", line 944, in __getitem__
+    with ak._errors.SlicingErrorContext(self, where):
+  File "/afs/cern.ch/user/a/aulee/.conda/envs/weaver/lib/python3.10/site-packages/awkward/_errors.py", line 63, in __exit__
+    self.handle_exception(exception_type, exception_value)
+  File "/afs/cern.ch/user/a/aulee/.conda/envs/weaver/lib/python3.10/site-packages/awkward/_errors.py", line 78, in handle_exception
+    raise self.decorate_exception(cls, exception)
+awkward._errors.FieldNotFoundError: no field 'fj_eta' in record with 1 fields
+
+This error occurred while attempting to slice
+
+    <Array [{event_no: 865233}, ..., {...}] type='7168 * {event_no: int32}'>
+
+with
+
+    'fj_eta'
