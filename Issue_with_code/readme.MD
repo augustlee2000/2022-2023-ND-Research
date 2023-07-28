@@ -8,4 +8,4 @@ I followed almost exactly the orginal GitHub the only differece is that I added 
 
 ## Using weaver 
 
-This is where the problems starts. I now take the two different .root files and run them locally using this command script (train_test.sh) (we had issues running gpu using HTCondor), this method is not supose to need a gpu. I should note that an active conda enviroment is need to run these commands, I followed this [GitHub](https://github.com/hqucms/weaver-core/#set-up-your-environment) to set up my environment. When I run the test_TTBar.root file uing the .sh file we get this error log
+This is where the problems starts. I now take the two different .root files and run them locally using this command script (train_test.sh) (we had issues running gpu using HTCondor), this method is not supose to need a gpu. I should note that an active conda enviroment is need to run these commands, I followed this [GitHub](https://github.com/hqucms/weaver-core/#set-up-your-environment) to set up my environment. When I run the test_TTBar.root file uing the .sh file we get this error log. When we run QCD we get this error log.
