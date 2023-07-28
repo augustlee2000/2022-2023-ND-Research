@@ -1,0 +1,728 @@
+Using auto-generated model prefix output/ak4_flavour_20230728-160718_flavour_ranger_lr0.005_batch128/net
+[2023-07-28 16:07:18,902] INFO: args:
+ - ('regression_mode', False)
+ - ('data_config', '/afs/cern.ch/user/a/aulee/BScouting/CMSSW_13_1_0_pre1/src/Run3ScoutingJetTagging/Training/AK4/flavour/data/flavour.yaml')
+ - ('extra_selection', None)
+ - ('extra_test_selection', None)
+ - ('data_train', ['test_TTBAR.root'])
+ - ('data_val', [])
+ - ('data_test', [])
+ - ('data_fraction', 1)
+ - ('file_fraction', 1)
+ - ('fetch_by_files', False)
+ - ('fetch_step', 0.01)
+ - ('in_memory', False)
+ - ('train_val_split', 0.8)
+ - ('no_remake_weights', False)
+ - ('demo', True)
+ - ('lr_finder', None)
+ - ('tensorboard', None)
+ - ('tensorboard_custom_fn', None)
+ - ('network_config', '/afs/cern.ch/user/a/aulee/BScouting/CMSSW_13_1_0_pre1/src/Run3ScoutingJetTagging/Training/AK4/flavour/networks/flavour.py')
+ - ('network_option', [])
+ - ('model_prefix', 'output/ak4_flavour_20230728-160718_flavour_ranger_lr0.005_batch128/net')
+ - ('load_model_weights', None)
+ - ('exclude_model_weights', None)
+ - ('num_epochs', 1)
+ - ('steps_per_epoch', None)
+ - ('steps_per_epoch_val', None)
+ - ('samples_per_epoch', None)
+ - ('samples_per_epoch_val', None)
+ - ('optimizer', 'ranger')
+ - ('optimizer_option', [])
+ - ('lr_scheduler', 'flat+decay')
+ - ('warmup_steps', 0)
+ - ('load_epoch', None)
+ - ('start_lr', 0.005)
+ - ('batch_size', 128)
+ - ('use_amp', False)
+ - ('gpus', '')
+ - ('predict_gpus', '')
+ - ('num_workers', 1)
+ - ('predict', False)
+ - ('predict_output', None)
+ - ('export_onnx', None)
+ - ('onnx_opset', 15)
+ - ('io_test', False)
+ - ('copy_inputs', False)
+ - ('log', 'output/ak4_flavour_20230728-160718_flavour_ranger_lr0.005_batch128.log')
+ - ('print', False)
+ - ('profile', False)
+ - ('backend', None)
+ - ('cross_validation', None)
+ - ('_auto_model_name', '20230728-160718_flavour_ranger_lr0.005_batch128')
+ - ('local_rank', None)
+[2023-07-28 16:07:18,902] INFO: Running in classification mode
+[2023-07-28 16:07:25,588] INFO: Using 1 files for training, range: (0, 0.8)
+[2023-07-28 16:07:25,588] INFO: Using 1 files for validation, range: (0.8, 1)
+[2023-07-28 16:07:25,588] INFO: ['test_TTBAR.root']
+[2023-07-28 16:07:25,588] INFO: ['test_TTBAR.root']
+[2023-07-28 16:07:25,594] INFO: Found file /afs/cern.ch/user/a/aulee/BScouting/CMSSW_13_1_0_pre1/src/Run3ScoutingJetTagging/Training/AK4/flavour/data/flavour.c8eae7f07364e658910c721cc448bcf9.auto.yaml w/ auto-generated preprocessing information, will use that instead!
+[2023-07-28 16:07:25,713] INFO: preprocess config: {'method': 'manual', 'data_fraction': None, 'params': None}
+[2023-07-28 16:07:25,713] INFO: selection: (np.abs(j_eta)<2.5) & (j_pt>15) & (j_pt<1000) & (event_no%7!=0) & ( (j_hadronFlavour>0) | ((j_hadronFlavour==0) & (np.abs(j_partonFlavour)!=4) & (np.abs(j_partonFlavour)!=5)) )
+[2023-07-28 16:07:25,713] INFO: test_time_selection: (np.abs(j_eta)<2.5) & (j_pt>15) & (j_pt<1000) & (event_no%7==0)
+[2023-07-28 16:07:25,714] INFO: var_funcs:
+ - ('pfcand_mask', 'ak.ones_like(pfcand_etarel)')
+ - ('label_b', '(j_nBHadrons==1)')
+ - ('label_bb', '(j_nBHadrons>1)')
+ - ('label_c', '(j_nBHadrons==0) & (j_nCHadrons==1)')
+ - ('label_cc', '(j_nBHadrons==0) & (j_nCHadrons>1)')
+ - ('label_uds', '(j_hadronFlavour==0) & (np.abs(j_partonFlavour)>0) & (np.abs(j_partonFlavour)<4)')
+ - ('label_g', '(j_hadronFlavour==0) & (j_partonFlavour==21)')
+ - ('label_undef', '(j_hadronFlavour==0) & (j_partonFlavour==0)')
+ - ('label_catB', '(j_hadronFlavour==5)')
+ - ('label_catC', '(j_hadronFlavour==4)')
+ - ('_label_', 'np.argmax(np.stack([ak.to_numpy(label_b),ak.to_numpy(label_bb),ak.to_numpy(label_c),ak.to_numpy(label_cc),ak.to_numpy(label_uds),ak.to_numpy(label_g),ak.to_numpy(label_undef),ak.to_numpy(label_catB),ak.to_numpy(label_catC)], axis=1), axis=1)')
+ - ('_labelcheck_', 'np.sum(np.stack([ak.to_numpy(label_b),ak.to_numpy(label_bb),ak.to_numpy(label_c),ak.to_numpy(label_cc),ak.to_numpy(label_uds),ak.to_numpy(label_g),ak.to_numpy(label_undef),ak.to_numpy(label_catB),ak.to_numpy(label_catC)], axis=1), axis=1)')
+[2023-07-28 16:07:25,714] INFO: input_names: ('pf_points', 'pf_features', 'pf_mask')
+[2023-07-28 16:07:25,714] INFO: input_dicts:
+ - ('pf_points', ['pfcand_etarel', 'pfcand_phirel'])
+ - ('pf_features', ['pfcand_pt_log_nopuppi', 'pfcand_e_log_nopuppi', 'pfcand_etarel', 'pfcand_phirel', 'pfcand_abseta', 'pfcand_charge', 'pfcand_lostInnerHits', 'pfcand_normchi2', 'pfcand_quality', 'pfcand_dz', 'pfcand_dzsig', 'pfcand_dxy', 'pfcand_dxysig', 'pfcand_btagEtaRel', 'pfcand_btagPtRatio', 'pfcand_btagPParRatio'])
+ - ('pf_mask', ['pfcand_mask'])
+[2023-07-28 16:07:25,714] INFO: input_shapes:
+ - ('pf_points', (-1, 2, 50))
+ - ('pf_features', (-1, 16, 50))
+ - ('pf_mask', (-1, 1, 50))
+[2023-07-28 16:07:25,714] INFO: preprocess_params:
+ - ('pfcand_etarel', {'length': 50, 'pad_mode': 'constant', 'center': None, 'scale': 1, 'min': -5, 'max': 5, 'pad_value': 0})
+ - ('pfcand_phirel', {'length': 50, 'pad_mode': 'constant', 'center': None, 'scale': 1, 'min': -5, 'max': 5, 'pad_value': 0})
+ - ('pfcand_pt_log_nopuppi', {'length': 50, 'pad_mode': 'constant', 'center': 0.8, 'scale': 0.7, 'min': -5, 'max': 5, 'pad_value': 0})
+ - ('pfcand_e_log_nopuppi', {'length': 50, 'pad_mode': 'constant', 'center': 1.2, 'scale': 0.6, 'min': -5, 'max': 5, 'pad_value': 0})
+ - ('pfcand_abseta', {'length': 50, 'pad_mode': 'constant', 'center': 0.8, 'scale': 1.2, 'min': -5, 'max': 5, 'pad_value': 0})
+ - ('pfcand_charge', {'length': 50, 'pad_mode': 'constant', 'center': None, 'scale': 1, 'min': -5, 'max': 5, 'pad_value': 0})
+ - ('pfcand_lostInnerHits', {'length': 50, 'pad_mode': 'constant', 'center': None, 'scale': 1, 'min': -5, 'max': 5, 'pad_value': 0})
+ - ('pfcand_normchi2', {'length': 50, 'pad_mode': 'constant', 'center': 5, 'scale': 0.2, 'min': -5, 'max': 5, 'pad_value': 0})
+ - ('pfcand_quality', {'length': 50, 'pad_mode': 'constant', 'center': 0, 'scale': 0.2, 'min': -5, 'max': 5, 'pad_value': 0})
+ - ('pfcand_dz', {'length': 50, 'pad_mode': 'constant', 'center': 0, 'scale': 150, 'min': -5, 'max': 5, 'pad_value': 0})
+ - ('pfcand_dzsig', {'length': 50, 'pad_mode': 'constant', 'center': 0, 'scale': 0.7, 'min': -5, 'max': 5, 'pad_value': 0})
+ - ('pfcand_dxy', {'length': 50, 'pad_mode': 'constant', 'center': 0, 'scale': 270, 'min': -5, 'max': 5, 'pad_value': 0})
+ - ('pfcand_dxysig', {'length': 50, 'pad_mode': 'constant', 'center': 1.1, 'scale': 1, 'min': -5, 'max': 5, 'pad_value': 0})
+ - ('pfcand_btagEtaRel', {'length': 50, 'pad_mode': 'constant', 'center': 2.1, 'scale': 0.5, 'min': -5, 'max': 5, 'pad_value': 0})
+ - ('pfcand_btagPtRatio', {'length': 50, 'pad_mode': 'constant', 'center': 0, 'scale': 1, 'min': -5, 'max': 5, 'pad_value': 0})
+ - ('pfcand_btagPParRatio', {'length': 50, 'pad_mode': 'constant', 'center': 0, 'scale': 1, 'min': -5, 'max': 5, 'pad_value': 0})
+ - ('pfcand_mask', {'length': 50, 'pad_mode': 'constant', 'center': None, 'scale': 1, 'min': -5, 'max': 5, 'pad_value': 0})
+[2023-07-28 16:07:25,714] INFO: label_names: ('_label_',)
+[2023-07-28 16:07:25,714] INFO: observer_names: ('event_no', 'j_pt', 'j_eta', 'j_phi', 'j_hadronFlavour', 'j_partonFlavour', 'j_nBHadrons', 'j_nCHadrons', 'j_mass')
+[2023-07-28 16:07:25,714] INFO: monitor_variables: ()
+[2023-07-28 16:07:25,714] INFO: reweight_method: flat
+[2023-07-28 16:07:25,714] INFO: reweight_basewgt: None
+[2023-07-28 16:07:25,714] INFO: reweight_branches: ('j_pt', 'j_eta')
+[2023-07-28 16:07:25,714] INFO: reweight_bins: ([15, 20, 26, 35, 46, 61, 80, 106, 141, 186, 247, 326, 432, 571, 756, 1000], [-2.5, -2.0, -1.5, -1.0, -0.5, 0.0, 0.5, 1.0, 1.5, 2.0, 2.5])
+[2023-07-28 16:07:25,714] INFO: reweight_classes: ('label_catB', 'label_catC', 'label_uds', 'label_g', 'label_undef')
+[2023-07-28 16:07:25,714] INFO: class_weights: [1, 1, 2.5, 5, 0.15]
+[2023-07-28 16:07:25,714] INFO: reweight_threshold: 15
+[2023-07-28 16:07:25,714] INFO: reweight_discard_under_overflow: True
+100%|██████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████| 1/1 [00:00<00:00,  1.78it/s]
+[2023-07-28 16:07:26,299] INFO: Using 5777 events to make weights
+[2023-07-28 16:07:26,302] INFO: label_catB (unweighted):
+ [[  0   0   0   0   0   0   0   0   0   0]
+ [  0   0   0   0   0   0   0   0   0   0]
+ [  0   0   0   0   0   0   0   0   0   0]
+ [  0   0   0   0   0   0   0   0   0   0]
+ [  0   0   0   0   0   0   0   0   0   0]
+ [  0   0   0   0   0   0   0   0   0   0]
+ [  0   0   0   0   0   0   0   0   0   0]
+ [  0   0   0   0   0   0   0   0   0   0]
+ [ 16  36  56  88  87  97  80  54  25  11]
+ [ 15  31  73 154 181 181 149  86  35  13]
+ [  5  14  30  54  66  72  54  25   8   3]
+ [  0   6  11  19  28  26  17   7   5   1]
+ [  1   0   3   7   8  13  11   5   1   0]
+ [  0   2   2   2   7   4   2   1   0   0]
+ [  0   0   0   1   1   0   0   0   0   0]]
+[2023-07-28 16:07:26,304] INFO: label_catC (unweighted):
+ [[ 0  0  0  0  0  0  0  0  0  0]
+ [ 0  0  0  0  0  0  0  0  0  0]
+ [ 0  0  0  0  0  0  0  0  0  0]
+ [ 0  0  0  0  0  0  0  0  0  0]
+ [ 0  0  0  0  0  0  0  0  0  0]
+ [ 0  0  0  0  0  0  0  0  0  0]
+ [ 0  0  0  0  0  0  0  0  0  0]
+ [ 0  0  0  0  0  0  0  0  0  0]
+ [ 1 15 10 27 25 31 27 20 12  7]
+ [ 8 15 28 37 68 57 45 29 26  5]
+ [ 4  8 11 18 27 17 18 16  9  2]
+ [ 2  2  4  5 12 15 12 10  2  2]
+ [ 2  1  2  3  3  5  3  1  0  0]
+ [ 1  1  0  0  1  1  1  1  0  0]
+ [ 0  0  0  0  0  1  0  0  0  0]]
+[2023-07-28 16:07:26,306] INFO: label_uds (unweighted):
+ [[  0   0   0   0   0   0   0   0   0   0]
+ [  0   0   0   0   0   0   0   0   0   0]
+ [  0   0   0   0   0   0   0   0   0   0]
+ [  0   0   0   0   0   0   0   0   0   0]
+ [  0   0   0   0   0   0   0   0   0   0]
+ [  0   0   0   0   0   0   0   0   0   0]
+ [  0   0   0   0   0   0   0   0   0   0]
+ [  0   0   0   0   0   0   0   0   0   0]
+ [ 22  34  32  46  65  55  63  47  28  16]
+ [ 45  59  72  80 101 120 120  68  65  47]
+ [ 16  21  33  37  30  53  41  29  24  16]
+ [  7  13  19  23  24  16  19  21  20   6]
+ [  1   6   8  10   5  10  12   6   3   0]
+ [  1   1   5   3   5   4   6   4   5   0]
+ [  0   0   0   1   3   1   0   0   0   0]]
+[2023-07-28 16:07:26,307] INFO: label_g (unweighted):
+ [[ 0  0  0  0  0  0  0  0  0  0]
+ [ 0  0  0  0  0  0  0  0  0  0]
+ [ 0  0  0  0  0  0  0  0  0  0]
+ [ 0  0  0  0  0  0  0  0  0  0]
+ [ 0  0  0  0  0  0  0  0  0  0]
+ [ 0  0  0  0  0  0  0  0  0  0]
+ [ 0  0  0  0  0  0  0  0  0  0]
+ [ 0  0  0  0  0  0  0  0  0  0]
+ [10 16 20 32 31 35 26 24 16  6]
+ [17 32 52 64 70 75 61 46 25 17]
+ [ 2 16 22 17 34 35 36 24 17  4]
+ [ 2  5  8 20 16 11 14  6  4  3]
+ [ 0  6  2 10  6  8  5  1  0  0]
+ [ 0  0  2  0  1  1  1  1  0  0]
+ [ 0  0  0  0  1  0  1  2  0  0]]
+[2023-07-28 16:07:26,308] INFO: label_undef (unweighted):
+ [[ 0  0  0  0  0  0  0  0  0  0]
+ [ 0  0  0  0  0  0  0  0  0  0]
+ [ 0  0  0  0  0  0  0  0  0  0]
+ [ 0  0  0  0  0  0  0  0  0  0]
+ [ 0  0  0  0  0  0  0  0  0  0]
+ [ 0  0  0  0  0  0  0  0  0  0]
+ [ 0  0  0  0  0  0  0  0  0  0]
+ [ 0  0  0  0  0  0  0  0  0  0]
+ [ 3  2 16 23  8 24 15 12  5  3]
+ [ 0  2  9 25 26 24 29 13  8  3]
+ [ 0  1  5  9  5  9  7  3  1  0]
+ [ 1  0  2  1  1  1  2  0  1  0]
+ [ 0  0  0  0  0  0  0  0  0  0]
+ [ 0  0  0  0  0  0  0  0  0  0]
+ [ 0  0  0  0  0  0  0  0  0  0]]
+/afs/cern.ch/user/a/aulee/.conda/envs/weaver/lib/python3.10/site-packages/weaver/utils/data/preprocess.py:243: RuntimeWarning: divide by zero encountered in divide
+  wgt = np.clip(np.nan_to_num(ref_val / hist, posinf=0), 0, 1)
+[2023-07-28 16:07:26,330] INFO: weights:
+[2023-07-28 16:07:26,331] INFO: label_catB:
+ [[0.         0.         0.         0.         0.         0.
+  0.         0.         0.         0.        ]
+ [0.         0.         0.         0.         0.         0.
+  0.         0.         0.         0.        ]
+ [0.         0.         0.         0.         0.         0.
+  0.         0.         0.         0.        ]
+ [0.         0.         0.         0.         0.         0.
+  0.         0.         0.         0.        ]
+ [0.         0.         0.         0.         0.         0.
+  0.         0.         0.         0.        ]
+ [0.         0.         0.         0.         0.         0.
+  0.         0.         0.         0.        ]
+ [0.         0.         0.         0.         0.         0.
+  0.         0.         0.         0.        ]
+ [0.         0.         0.         0.         0.         0.
+  0.         0.         0.         0.        ]
+ [0.02186321 0.00971698 0.00624663 0.00397513 0.00402082 0.0036063
+  0.00437264 0.00647799 0.01399245 0.03180103]
+ [0.02332075 0.01128424 0.00479194 0.0022715  0.00193266 0.00193266
+  0.00234773 0.00406757 0.00999461 0.02690856]
+ [0.06996226 0.02498652 0.01166038 0.00647799 0.00530017 0.00485849
+  0.00647799 0.01399245 0.04372641 0.11660378]
+ [0.         0.05830189 0.03180103 0.01841112 0.01249326 0.01345428
+  0.02057714 0.04997305 0.06996226 0.17490566]
+ [0.17490566 0.         0.11660378 0.04997305 0.04372641 0.02690856
+  0.03180103 0.06996226 0.17490566 0.        ]
+ [0.         0.17490566 0.17490566 0.17490566 0.04997305 0.08745283
+  0.17490566 0.17490566 0.         0.        ]
+ [0.         0.         0.         0.17490566 0.17490566 0.
+  0.         0.         0.         0.        ]]
+[2023-07-28 16:07:26,332] INFO: label_catC:
+ [[0.         0.         0.         0.         0.         0.
+  0.         0.         0.         0.        ]
+ [0.         0.         0.         0.         0.         0.
+  0.         0.         0.         0.        ]
+ [0.         0.         0.         0.         0.         0.
+  0.         0.         0.         0.        ]
+ [0.         0.         0.         0.         0.         0.
+  0.         0.         0.         0.        ]
+ [0.         0.         0.         0.         0.         0.
+  0.         0.         0.         0.        ]
+ [0.         0.         0.         0.         0.         0.
+  0.         0.         0.         0.        ]
+ [0.         0.         0.         0.         0.         0.
+  0.         0.         0.         0.        ]
+ [0.         0.         0.         0.         0.         0.
+  0.         0.         0.         0.        ]
+ [0.3370909  0.02247273 0.03370909 0.01248485 0.01348364 0.0108739
+  0.01248485 0.01685455 0.02809091 0.04815585]
+ [0.04213636 0.02247273 0.01203896 0.00911057 0.00495722 0.00591388
+  0.00749091 0.01162382 0.01296504 0.06741818]
+ [0.08427273 0.04213636 0.03064463 0.01872727 0.01248485 0.01982888
+  0.01872727 0.02106818 0.03745455 0.16854545]
+ [0.16854545 0.16854545 0.08427273 0.06741818 0.02809091 0.02247273
+  0.02809091 0.03370909 0.16854545 0.16854545]
+ [0.16854545 0.3370909  0.16854545 0.11236364 0.11236364 0.06741818
+  0.11236364 0.3370909  0.         0.        ]
+ [0.3370909  0.3370909  0.         0.         0.3370909  0.3370909
+  0.3370909  0.3370909  0.         0.        ]
+ [0.         0.         0.         0.         0.         0.3370909
+  0.         0.         0.         0.        ]]
+[2023-07-28 16:07:26,332] INFO: label_uds:
+ [[0.         0.         0.         0.         0.         0.
+  0.         0.         0.         0.        ]
+ [0.         0.         0.         0.         0.         0.
+  0.         0.         0.         0.        ]
+ [0.         0.         0.         0.         0.         0.
+  0.         0.         0.         0.        ]
+ [0.         0.         0.         0.         0.         0.
+  0.         0.         0.         0.        ]
+ [0.         0.         0.         0.         0.         0.
+  0.         0.         0.         0.        ]
+ [0.         0.         0.         0.         0.         0.
+  0.         0.         0.         0.        ]
+ [0.         0.         0.         0.         0.         0.
+  0.         0.         0.         0.        ]
+ [0.         0.         0.         0.         0.         0.
+  0.         0.         0.         0.        ]
+ [0.03728882 0.02412806 0.02563606 0.01783378 0.01262083 0.01491553
+  0.01302149 0.01745434 0.02929836 0.05127212]
+ [0.01823009 0.01390431 0.01139381 0.01025442 0.00812232 0.00683628
+  0.00683628 0.01206403 0.01262083 0.01745434]
+ [0.05127212 0.03906447 0.02485921 0.02217173 0.02734513 0.01547838
+  0.02000863 0.02828807 0.03418142 0.05127212]
+ [0.11719343 0.06310415 0.04317652 0.03566756 0.03418142 0.05127212
+  0.04317652 0.03906447 0.0410177  0.13672566]
+ [0.2050885  0.13672566 0.10254425 0.0820354  0.1640708  0.0820354
+  0.06836283 0.13672566 0.2050885  0.        ]
+ [0.2050885  0.2050885  0.1640708  0.2050885  0.1640708  0.2050885
+  0.13672566 0.2050885  0.1640708  0.        ]
+ [0.         0.         0.         0.2050885  0.2050885  0.2050885
+  0.         0.         0.         0.        ]]
+[2023-07-28 16:07:26,333] INFO: label_g:
+ [[0.         0.         0.         0.         0.         0.
+  0.         0.         0.         0.        ]
+ [0.         0.         0.         0.         0.         0.
+  0.         0.         0.         0.        ]
+ [0.         0.         0.         0.         0.         0.
+  0.         0.         0.         0.        ]
+ [0.         0.         0.         0.         0.         0.
+  0.         0.         0.         0.        ]
+ [0.         0.         0.         0.         0.         0.
+  0.         0.         0.         0.        ]
+ [0.         0.         0.         0.         0.         0.
+  0.         0.         0.         0.        ]
+ [0.         0.         0.         0.         0.         0.
+  0.         0.         0.         0.        ]
+ [0.         0.         0.         0.         0.         0.
+  0.         0.         0.         0.        ]
+ [0.17999999 0.1125     0.09       0.05625    0.05806451 0.05142857
+  0.06923077 0.075      0.1125     0.3       ]
+ [0.10588235 0.05625    0.03461539 0.028125   0.02571429 0.024
+  0.02950819 0.03913043 0.072      0.10588235]
+ [0.9        0.1125     0.08181819 0.10588235 0.05294118 0.05142857
+  0.05       0.075      0.10588235 0.45      ]
+ [0.9        0.35999998 0.225      0.09       0.1125     0.16363637
+  0.12857144 0.3        0.45       0.6       ]
+ [0.         0.3        0.9        0.17999999 0.3        0.225
+  0.35999998 0.9        0.         0.        ]
+ [0.         0.         0.9        0.         0.9        0.9
+  0.9        0.9        0.         0.        ]
+ [0.         0.         0.         0.         0.9        0.
+  0.9        0.9        0.         0.        ]]
+[2023-07-28 16:07:26,333] INFO: label_undef:
+ [[0.         0.         0.         0.         0.         0.
+  0.         0.         0.         0.        ]
+ [0.         0.         0.         0.         0.         0.
+  0.         0.         0.         0.        ]
+ [0.         0.         0.         0.         0.         0.
+  0.         0.         0.         0.        ]
+ [0.         0.         0.         0.         0.         0.
+  0.         0.         0.         0.        ]
+ [0.         0.         0.         0.         0.         0.
+  0.         0.         0.         0.        ]
+ [0.         0.         0.         0.         0.         0.
+  0.         0.         0.         0.        ]
+ [0.         0.         0.         0.         0.         0.
+  0.         0.         0.         0.        ]
+ [0.         0.         0.         0.         0.         0.
+  0.         0.         0.         0.        ]
+ [0.02726471 0.04089706 0.00511213 0.00355627 0.01022427 0.00340809
+  0.00545294 0.00681618 0.01635882 0.02726471]
+ [0.         0.04089706 0.00908824 0.00327176 0.00314593 0.00340809
+  0.00282049 0.00629186 0.01022427 0.02726471]
+ [0.         0.08179412 0.01635882 0.00908824 0.01635882 0.00908824
+  0.01168488 0.02726471 0.08179412 0.        ]
+ [0.08179412 0.         0.04089706 0.08179412 0.08179412 0.08179412
+  0.04089706 0.         0.08179412 0.        ]
+ [0.         0.         0.         0.         0.         0.
+  0.         0.         0.         0.        ]
+ [0.         0.         0.         0.         0.         0.
+  0.         0.         0.         0.        ]
+ [0.         0.         0.         0.         0.         0.
+  0.         0.         0.         0.        ]]
+[2023-07-28 16:07:26,334] INFO: Raw hist * weights:
+[2023-07-28 16:07:26,334] INFO: label_catB:
+ [[0 0 0 0 0 0 0 0 0 0]
+ [0 0 0 0 0 0 0 0 0 0]
+ [0 0 0 0 0 0 0 0 0 0]
+ [0 0 0 0 0 0 0 0 0 0]
+ [0 0 0 0 0 0 0 0 0 0]
+ [0 0 0 0 0 0 0 0 0 0]
+ [0 0 0 0 0 0 0 0 0 0]
+ [0 0 0 0 0 0 0 0 0 0]
+ [0 0 0 0 0 0 0 0 0 0]
+ [0 0 0 0 0 0 0 0 0 0]
+ [0 0 0 0 0 0 0 0 0 0]
+ [0 0 0 0 0 0 0 0 0 0]
+ [0 0 0 0 0 0 0 0 0 0]
+ [0 0 0 0 0 0 0 0 0 0]
+ [0 0 0 0 0 0 0 0 0 0]]
+[2023-07-28 16:07:26,334] INFO: label_catC:
+ [[0 0 0 0 0 0 0 0 0 0]
+ [0 0 0 0 0 0 0 0 0 0]
+ [0 0 0 0 0 0 0 0 0 0]
+ [0 0 0 0 0 0 0 0 0 0]
+ [0 0 0 0 0 0 0 0 0 0]
+ [0 0 0 0 0 0 0 0 0 0]
+ [0 0 0 0 0 0 0 0 0 0]
+ [0 0 0 0 0 0 0 0 0 0]
+ [0 0 0 0 0 0 0 0 0 0]
+ [0 0 0 0 0 0 0 0 0 0]
+ [0 0 0 0 0 0 0 0 0 0]
+ [0 0 0 0 0 0 0 0 0 0]
+ [0 0 0 0 0 0 0 0 0 0]
+ [0 0 0 0 0 0 0 0 0 0]
+ [0 0 0 0 0 0 0 0 0 0]]
+[2023-07-28 16:07:26,334] INFO: label_uds:
+ [[0 0 0 0 0 0 0 0 0 0]
+ [0 0 0 0 0 0 0 0 0 0]
+ [0 0 0 0 0 0 0 0 0 0]
+ [0 0 0 0 0 0 0 0 0 0]
+ [0 0 0 0 0 0 0 0 0 0]
+ [0 0 0 0 0 0 0 0 0 0]
+ [0 0 0 0 0 0 0 0 0 0]
+ [0 0 0 0 0 0 0 0 0 0]
+ [0 0 0 0 0 0 0 0 0 0]
+ [0 0 0 0 0 0 0 0 0 0]
+ [0 0 0 0 0 0 0 0 0 0]
+ [0 0 0 0 0 0 0 0 0 0]
+ [0 0 0 0 0 0 0 0 0 0]
+ [0 0 0 0 0 0 0 0 0 0]
+ [0 0 0 0 0 0 0 0 0 0]]
+[2023-07-28 16:07:26,335] INFO: label_g:
+ [[0 0 0 0 0 0 0 0 0 0]
+ [0 0 0 0 0 0 0 0 0 0]
+ [0 0 0 0 0 0 0 0 0 0]
+ [0 0 0 0 0 0 0 0 0 0]
+ [0 0 0 0 0 0 0 0 0 0]
+ [0 0 0 0 0 0 0 0 0 0]
+ [0 0 0 0 0 0 0 0 0 0]
+ [0 0 0 0 0 0 0 0 0 0]
+ [1 1 1 1 1 1 1 1 1 1]
+ [1 1 1 1 1 1 1 1 1 1]
+ [1 1 1 1 1 1 1 1 1 1]
+ [1 1 1 1 1 1 1 1 1 1]
+ [0 1 1 1 1 1 1 0 0 0]
+ [0 0 1 0 0 0 0 0 0 0]
+ [0 0 0 0 0 0 0 1 0 0]]
+[2023-07-28 16:07:26,335] INFO: label_undef:
+ [[0 0 0 0 0 0 0 0 0 0]
+ [0 0 0 0 0 0 0 0 0 0]
+ [0 0 0 0 0 0 0 0 0 0]
+ [0 0 0 0 0 0 0 0 0 0]
+ [0 0 0 0 0 0 0 0 0 0]
+ [0 0 0 0 0 0 0 0 0 0]
+ [0 0 0 0 0 0 0 0 0 0]
+ [0 0 0 0 0 0 0 0 0 0]
+ [0 0 0 0 0 0 0 0 0 0]
+ [0 0 0 0 0 0 0 0 0 0]
+ [0 0 0 0 0 0 0 0 0 0]
+ [0 0 0 0 0 0 0 0 0 0]
+ [0 0 0 0 0 0 0 0 0 0]
+ [0 0 0 0 0 0 0 0 0 0]
+ [0 0 0 0 0 0 0 0 0 0]]
+[2023-07-28 16:07:26,335] INFO: Writing YAML file w/ reweighting info to /afs/cern.ch/user/a/aulee/BScouting/CMSSW_13_1_0_pre1/src/Run3ScoutingJetTagging/Training/AK4/flavour/data/flavour.c8eae7f07364e658910c721cc448bcf9.auto.yaml
+[2023-07-28 16:07:26,399] INFO: preprocess config: {'method': 'manual', 'data_fraction': None, 'params': None}
+[2023-07-28 16:07:26,399] INFO: selection: (np.abs(j_eta)<2.5) & (j_pt>15) & (j_pt<1000) & (event_no%7!=0) & ( (j_hadronFlavour>0) | ((j_hadronFlavour==0) & (np.abs(j_partonFlavour)!=4) & (np.abs(j_partonFlavour)!=5)) )
+[2023-07-28 16:07:26,399] INFO: test_time_selection: (np.abs(j_eta)<2.5) & (j_pt>15) & (j_pt<1000) & (event_no%7==0)
+[2023-07-28 16:07:26,399] INFO: var_funcs:
+ - ('pfcand_mask', 'ak.ones_like(pfcand_etarel)')
+ - ('label_b', '(j_nBHadrons==1)')
+ - ('label_bb', '(j_nBHadrons>1)')
+ - ('label_c', '(j_nBHadrons==0) & (j_nCHadrons==1)')
+ - ('label_cc', '(j_nBHadrons==0) & (j_nCHadrons>1)')
+ - ('label_uds', '(j_hadronFlavour==0) & (np.abs(j_partonFlavour)>0) & (np.abs(j_partonFlavour)<4)')
+ - ('label_g', '(j_hadronFlavour==0) & (j_partonFlavour==21)')
+ - ('label_undef', '(j_hadronFlavour==0) & (j_partonFlavour==0)')
+ - ('label_catB', '(j_hadronFlavour==5)')
+ - ('label_catC', '(j_hadronFlavour==4)')
+ - ('_label_', 'np.argmax(np.stack([ak.to_numpy(label_b),ak.to_numpy(label_bb),ak.to_numpy(label_c),ak.to_numpy(label_cc),ak.to_numpy(label_uds),ak.to_numpy(label_g),ak.to_numpy(label_undef),ak.to_numpy(label_catB),ak.to_numpy(label_catC)], axis=1), axis=1)')
+ - ('_labelcheck_', 'np.sum(np.stack([ak.to_numpy(label_b),ak.to_numpy(label_bb),ak.to_numpy(label_c),ak.to_numpy(label_cc),ak.to_numpy(label_uds),ak.to_numpy(label_g),ak.to_numpy(label_undef),ak.to_numpy(label_catB),ak.to_numpy(label_catC)], axis=1), axis=1)')
+[2023-07-28 16:07:26,399] INFO: input_names: ('pf_points', 'pf_features', 'pf_mask')
+[2023-07-28 16:07:26,399] INFO: input_dicts:
+ - ('pf_points', ['pfcand_etarel', 'pfcand_phirel'])
+ - ('pf_features', ['pfcand_pt_log_nopuppi', 'pfcand_e_log_nopuppi', 'pfcand_etarel', 'pfcand_phirel', 'pfcand_abseta', 'pfcand_charge', 'pfcand_lostInnerHits', 'pfcand_normchi2', 'pfcand_quality', 'pfcand_dz', 'pfcand_dzsig', 'pfcand_dxy', 'pfcand_dxysig', 'pfcand_btagEtaRel', 'pfcand_btagPtRatio', 'pfcand_btagPParRatio'])
+ - ('pf_mask', ['pfcand_mask'])
+[2023-07-28 16:07:26,399] INFO: input_shapes:
+ - ('pf_points', (-1, 2, 50))
+ - ('pf_features', (-1, 16, 50))
+ - ('pf_mask', (-1, 1, 50))
+[2023-07-28 16:07:26,399] INFO: preprocess_params:
+ - ('pfcand_etarel', {'length': 50, 'pad_mode': 'constant', 'center': None, 'scale': 1, 'min': -5, 'max': 5, 'pad_value': 0})
+ - ('pfcand_phirel', {'length': 50, 'pad_mode': 'constant', 'center': None, 'scale': 1, 'min': -5, 'max': 5, 'pad_value': 0})
+ - ('pfcand_pt_log_nopuppi', {'length': 50, 'pad_mode': 'constant', 'center': 0.8, 'scale': 0.7, 'min': -5, 'max': 5, 'pad_value': 0})
+ - ('pfcand_e_log_nopuppi', {'length': 50, 'pad_mode': 'constant', 'center': 1.2, 'scale': 0.6, 'min': -5, 'max': 5, 'pad_value': 0})
+ - ('pfcand_abseta', {'length': 50, 'pad_mode': 'constant', 'center': 0.8, 'scale': 1.2, 'min': -5, 'max': 5, 'pad_value': 0})
+ - ('pfcand_charge', {'length': 50, 'pad_mode': 'constant', 'center': None, 'scale': 1, 'min': -5, 'max': 5, 'pad_value': 0})
+ - ('pfcand_lostInnerHits', {'length': 50, 'pad_mode': 'constant', 'center': None, 'scale': 1, 'min': -5, 'max': 5, 'pad_value': 0})
+ - ('pfcand_normchi2', {'length': 50, 'pad_mode': 'constant', 'center': 5, 'scale': 0.2, 'min': -5, 'max': 5, 'pad_value': 0})
+ - ('pfcand_quality', {'length': 50, 'pad_mode': 'constant', 'center': 0, 'scale': 0.2, 'min': -5, 'max': 5, 'pad_value': 0})
+ - ('pfcand_dz', {'length': 50, 'pad_mode': 'constant', 'center': 0, 'scale': 150, 'min': -5, 'max': 5, 'pad_value': 0})
+ - ('pfcand_dzsig', {'length': 50, 'pad_mode': 'constant', 'center': 0, 'scale': 0.7, 'min': -5, 'max': 5, 'pad_value': 0})
+ - ('pfcand_dxy', {'length': 50, 'pad_mode': 'constant', 'center': 0, 'scale': 270, 'min': -5, 'max': 5, 'pad_value': 0})
+ - ('pfcand_dxysig', {'length': 50, 'pad_mode': 'constant', 'center': 1.1, 'scale': 1, 'min': -5, 'max': 5, 'pad_value': 0})
+ - ('pfcand_btagEtaRel', {'length': 50, 'pad_mode': 'constant', 'center': 2.1, 'scale': 0.5, 'min': -5, 'max': 5, 'pad_value': 0})
+ - ('pfcand_btagPtRatio', {'length': 50, 'pad_mode': 'constant', 'center': 0, 'scale': 1, 'min': -5, 'max': 5, 'pad_value': 0})
+ - ('pfcand_btagPParRatio', {'length': 50, 'pad_mode': 'constant', 'center': 0, 'scale': 1, 'min': -5, 'max': 5, 'pad_value': 0})
+ - ('pfcand_mask', {'length': 50, 'pad_mode': 'constant', 'center': None, 'scale': 1, 'min': -5, 'max': 5, 'pad_value': 0})
+[2023-07-28 16:07:26,399] INFO: label_names: ('_label_',)
+[2023-07-28 16:07:26,399] INFO: observer_names: ()
+[2023-07-28 16:07:26,399] INFO: monitor_variables: ()
+[2023-07-28 16:07:26,399] INFO: reweight_method: flat
+[2023-07-28 16:07:26,399] INFO: reweight_basewgt: None
+[2023-07-28 16:07:26,399] INFO: reweight_branches: ('j_pt', 'j_eta')
+[2023-07-28 16:07:26,399] INFO: reweight_bins: ([15, 20, 26, 35, 46, 61, 80, 106, 141, 186, 247, 326, 432, 571, 756, 1000], [-2.5, -2.0, -1.5, -1.0, -0.5, 0.0, 0.5, 1.0, 1.5, 2.0, 2.5])
+[2023-07-28 16:07:26,399] INFO: reweight_classes: ('label_catB', 'label_catC', 'label_uds', 'label_g', 'label_undef')
+[2023-07-28 16:07:26,400] INFO: class_weights: [1, 1, 2.5, 5, 0.15]
+[2023-07-28 16:07:26,400] INFO: reweight_threshold: 15
+[2023-07-28 16:07:26,400] INFO: reweight_discard_under_overflow: True
+[2023-07-28 16:07:26,401] INFO: Found file /afs/cern.ch/user/a/aulee/BScouting/CMSSW_13_1_0_pre1/src/Run3ScoutingJetTagging/Training/AK4/flavour/data/flavour.c8eae7f07364e658910c721cc448bcf9.auto.yaml w/ auto-generated preprocessing information, will use that instead!
+[2023-07-28 16:07:26,440] INFO: preprocess config: {'method': 'manual', 'data_fraction': None, 'params': None}
+[2023-07-28 16:07:26,440] INFO: selection: (np.abs(j_eta)<2.5) & (j_pt>15) & (j_pt<1000) & (event_no%7!=0) & ( (j_hadronFlavour>0) | ((j_hadronFlavour==0) & (np.abs(j_partonFlavour)!=4) & (np.abs(j_partonFlavour)!=5)) )
+[2023-07-28 16:07:26,440] INFO: test_time_selection: (np.abs(j_eta)<2.5) & (j_pt>15) & (j_pt<1000) & (event_no%7==0)
+[2023-07-28 16:07:26,441] INFO: var_funcs:
+ - ('pfcand_mask', 'ak.ones_like(pfcand_etarel)')
+ - ('label_b', '(j_nBHadrons==1)')
+ - ('label_bb', '(j_nBHadrons>1)')
+ - ('label_c', '(j_nBHadrons==0) & (j_nCHadrons==1)')
+ - ('label_cc', '(j_nBHadrons==0) & (j_nCHadrons>1)')
+ - ('label_uds', '(j_hadronFlavour==0) & (np.abs(j_partonFlavour)>0) & (np.abs(j_partonFlavour)<4)')
+ - ('label_g', '(j_hadronFlavour==0) & (j_partonFlavour==21)')
+ - ('label_undef', '(j_hadronFlavour==0) & (j_partonFlavour==0)')
+ - ('label_catB', '(j_hadronFlavour==5)')
+ - ('label_catC', '(j_hadronFlavour==4)')
+ - ('_label_', 'np.argmax(np.stack([ak.to_numpy(label_b),ak.to_numpy(label_bb),ak.to_numpy(label_c),ak.to_numpy(label_cc),ak.to_numpy(label_uds),ak.to_numpy(label_g),ak.to_numpy(label_undef),ak.to_numpy(label_catB),ak.to_numpy(label_catC)], axis=1), axis=1)')
+ - ('_labelcheck_', 'np.sum(np.stack([ak.to_numpy(label_b),ak.to_numpy(label_bb),ak.to_numpy(label_c),ak.to_numpy(label_cc),ak.to_numpy(label_uds),ak.to_numpy(label_g),ak.to_numpy(label_undef),ak.to_numpy(label_catB),ak.to_numpy(label_catC)], axis=1), axis=1)')
+[2023-07-28 16:07:26,441] INFO: input_names: ('pf_points', 'pf_features', 'pf_mask')
+[2023-07-28 16:07:26,441] INFO: input_dicts:
+ - ('pf_points', ['pfcand_etarel', 'pfcand_phirel'])
+ - ('pf_features', ['pfcand_pt_log_nopuppi', 'pfcand_e_log_nopuppi', 'pfcand_etarel', 'pfcand_phirel', 'pfcand_abseta', 'pfcand_charge', 'pfcand_lostInnerHits', 'pfcand_normchi2', 'pfcand_quality', 'pfcand_dz', 'pfcand_dzsig', 'pfcand_dxy', 'pfcand_dxysig', 'pfcand_btagEtaRel', 'pfcand_btagPtRatio', 'pfcand_btagPParRatio'])
+ - ('pf_mask', ['pfcand_mask'])
+[2023-07-28 16:07:26,441] INFO: input_shapes:
+ - ('pf_points', (-1, 2, 50))
+ - ('pf_features', (-1, 16, 50))
+ - ('pf_mask', (-1, 1, 50))
+[2023-07-28 16:07:26,441] INFO: preprocess_params:
+ - ('pfcand_etarel', {'length': 50, 'pad_mode': 'constant', 'center': None, 'scale': 1, 'min': -5, 'max': 5, 'pad_value': 0})
+ - ('pfcand_phirel', {'length': 50, 'pad_mode': 'constant', 'center': None, 'scale': 1, 'min': -5, 'max': 5, 'pad_value': 0})
+ - ('pfcand_pt_log_nopuppi', {'length': 50, 'pad_mode': 'constant', 'center': 0.8, 'scale': 0.7, 'min': -5, 'max': 5, 'pad_value': 0})
+ - ('pfcand_e_log_nopuppi', {'length': 50, 'pad_mode': 'constant', 'center': 1.2, 'scale': 0.6, 'min': -5, 'max': 5, 'pad_value': 0})
+ - ('pfcand_abseta', {'length': 50, 'pad_mode': 'constant', 'center': 0.8, 'scale': 1.2, 'min': -5, 'max': 5, 'pad_value': 0})
+ - ('pfcand_charge', {'length': 50, 'pad_mode': 'constant', 'center': None, 'scale': 1, 'min': -5, 'max': 5, 'pad_value': 0})
+ - ('pfcand_lostInnerHits', {'length': 50, 'pad_mode': 'constant', 'center': None, 'scale': 1, 'min': -5, 'max': 5, 'pad_value': 0})
+ - ('pfcand_normchi2', {'length': 50, 'pad_mode': 'constant', 'center': 5, 'scale': 0.2, 'min': -5, 'max': 5, 'pad_value': 0})
+ - ('pfcand_quality', {'length': 50, 'pad_mode': 'constant', 'center': 0, 'scale': 0.2, 'min': -5, 'max': 5, 'pad_value': 0})
+ - ('pfcand_dz', {'length': 50, 'pad_mode': 'constant', 'center': 0, 'scale': 150, 'min': -5, 'max': 5, 'pad_value': 0})
+ - ('pfcand_dzsig', {'length': 50, 'pad_mode': 'constant', 'center': 0, 'scale': 0.7, 'min': -5, 'max': 5, 'pad_value': 0})
+ - ('pfcand_dxy', {'length': 50, 'pad_mode': 'constant', 'center': 0, 'scale': 270, 'min': -5, 'max': 5, 'pad_value': 0})
+ - ('pfcand_dxysig', {'length': 50, 'pad_mode': 'constant', 'center': 1.1, 'scale': 1, 'min': -5, 'max': 5, 'pad_value': 0})
+ - ('pfcand_btagEtaRel', {'length': 50, 'pad_mode': 'constant', 'center': 2.1, 'scale': 0.5, 'min': -5, 'max': 5, 'pad_value': 0})
+ - ('pfcand_btagPtRatio', {'length': 50, 'pad_mode': 'constant', 'center': 0, 'scale': 1, 'min': -5, 'max': 5, 'pad_value': 0})
+ - ('pfcand_btagPParRatio', {'length': 50, 'pad_mode': 'constant', 'center': 0, 'scale': 1, 'min': -5, 'max': 5, 'pad_value': 0})
+ - ('pfcand_mask', {'length': 50, 'pad_mode': 'constant', 'center': None, 'scale': 1, 'min': -5, 'max': 5, 'pad_value': 0})
+[2023-07-28 16:07:26,441] INFO: label_names: ('_label_',)
+[2023-07-28 16:07:26,441] INFO: observer_names: ('event_no', 'j_pt', 'j_eta', 'j_phi', 'j_hadronFlavour', 'j_partonFlavour', 'j_nBHadrons', 'j_nCHadrons', 'j_mass')
+[2023-07-28 16:07:26,441] INFO: monitor_variables: ()
+[2023-07-28 16:07:26,441] INFO: reweight_method: flat
+[2023-07-28 16:07:26,441] INFO: reweight_basewgt: None
+[2023-07-28 16:07:26,441] INFO: reweight_branches: ('j_pt', 'j_eta')
+[2023-07-28 16:07:26,441] INFO: reweight_bins: ([15, 20, 26, 35, 46, 61, 80, 106, 141, 186, 247, 326, 432, 571, 756, 1000], [-2.5, -2.0, -1.5, -1.0, -0.5, 0.0, 0.5, 1.0, 1.5, 2.0, 2.5])
+[2023-07-28 16:07:26,441] INFO: reweight_classes: ('label_catB', 'label_catC', 'label_uds', 'label_g', 'label_undef')
+[2023-07-28 16:07:26,441] INFO: class_weights: [1, 1, 2.5, 5, 0.15]
+[2023-07-28 16:07:26,441] INFO: reweight_threshold: 15
+[2023-07-28 16:07:26,441] INFO: reweight_discard_under_overflow: True
+[2023-07-28 16:07:26,482] INFO: preprocess config: {'method': 'manual', 'data_fraction': None, 'params': None}
+[2023-07-28 16:07:26,482] INFO: selection: (np.abs(j_eta)<2.5) & (j_pt>15) & (j_pt<1000) & (event_no%7!=0) & ( (j_hadronFlavour>0) | ((j_hadronFlavour==0) & (np.abs(j_partonFlavour)!=4) & (np.abs(j_partonFlavour)!=5)) )
+[2023-07-28 16:07:26,482] INFO: test_time_selection: (np.abs(j_eta)<2.5) & (j_pt>15) & (j_pt<1000) & (event_no%7==0)
+[2023-07-28 16:07:26,482] INFO: var_funcs:
+ - ('pfcand_mask', 'ak.ones_like(pfcand_etarel)')
+ - ('label_b', '(j_nBHadrons==1)')
+ - ('label_bb', '(j_nBHadrons>1)')
+ - ('label_c', '(j_nBHadrons==0) & (j_nCHadrons==1)')
+ - ('label_cc', '(j_nBHadrons==0) & (j_nCHadrons>1)')
+ - ('label_uds', '(j_hadronFlavour==0) & (np.abs(j_partonFlavour)>0) & (np.abs(j_partonFlavour)<4)')
+ - ('label_g', '(j_hadronFlavour==0) & (j_partonFlavour==21)')
+ - ('label_undef', '(j_hadronFlavour==0) & (j_partonFlavour==0)')
+ - ('label_catB', '(j_hadronFlavour==5)')
+ - ('label_catC', '(j_hadronFlavour==4)')
+ - ('_label_', 'np.argmax(np.stack([ak.to_numpy(label_b),ak.to_numpy(label_bb),ak.to_numpy(label_c),ak.to_numpy(label_cc),ak.to_numpy(label_uds),ak.to_numpy(label_g),ak.to_numpy(label_undef),ak.to_numpy(label_catB),ak.to_numpy(label_catC)], axis=1), axis=1)')
+ - ('_labelcheck_', 'np.sum(np.stack([ak.to_numpy(label_b),ak.to_numpy(label_bb),ak.to_numpy(label_c),ak.to_numpy(label_cc),ak.to_numpy(label_uds),ak.to_numpy(label_g),ak.to_numpy(label_undef),ak.to_numpy(label_catB),ak.to_numpy(label_catC)], axis=1), axis=1)')
+[2023-07-28 16:07:26,482] INFO: input_names: ('pf_points', 'pf_features', 'pf_mask')
+[2023-07-28 16:07:26,482] INFO: input_dicts:
+ - ('pf_points', ['pfcand_etarel', 'pfcand_phirel'])
+ - ('pf_features', ['pfcand_pt_log_nopuppi', 'pfcand_e_log_nopuppi', 'pfcand_etarel', 'pfcand_phirel', 'pfcand_abseta', 'pfcand_charge', 'pfcand_lostInnerHits', 'pfcand_normchi2', 'pfcand_quality', 'pfcand_dz', 'pfcand_dzsig', 'pfcand_dxy', 'pfcand_dxysig', 'pfcand_btagEtaRel', 'pfcand_btagPtRatio', 'pfcand_btagPParRatio'])
+ - ('pf_mask', ['pfcand_mask'])
+[2023-07-28 16:07:26,482] INFO: input_shapes:
+ - ('pf_points', (-1, 2, 50))
+ - ('pf_features', (-1, 16, 50))
+ - ('pf_mask', (-1, 1, 50))
+[2023-07-28 16:07:26,482] INFO: preprocess_params:
+ - ('pfcand_etarel', {'length': 50, 'pad_mode': 'constant', 'center': None, 'scale': 1, 'min': -5, 'max': 5, 'pad_value': 0})
+ - ('pfcand_phirel', {'length': 50, 'pad_mode': 'constant', 'center': None, 'scale': 1, 'min': -5, 'max': 5, 'pad_value': 0})
+ - ('pfcand_pt_log_nopuppi', {'length': 50, 'pad_mode': 'constant', 'center': 0.8, 'scale': 0.7, 'min': -5, 'max': 5, 'pad_value': 0})
+ - ('pfcand_e_log_nopuppi', {'length': 50, 'pad_mode': 'constant', 'center': 1.2, 'scale': 0.6, 'min': -5, 'max': 5, 'pad_value': 0})
+ - ('pfcand_abseta', {'length': 50, 'pad_mode': 'constant', 'center': 0.8, 'scale': 1.2, 'min': -5, 'max': 5, 'pad_value': 0})
+ - ('pfcand_charge', {'length': 50, 'pad_mode': 'constant', 'center': None, 'scale': 1, 'min': -5, 'max': 5, 'pad_value': 0})
+ - ('pfcand_lostInnerHits', {'length': 50, 'pad_mode': 'constant', 'center': None, 'scale': 1, 'min': -5, 'max': 5, 'pad_value': 0})
+ - ('pfcand_normchi2', {'length': 50, 'pad_mode': 'constant', 'center': 5, 'scale': 0.2, 'min': -5, 'max': 5, 'pad_value': 0})
+ - ('pfcand_quality', {'length': 50, 'pad_mode': 'constant', 'center': 0, 'scale': 0.2, 'min': -5, 'max': 5, 'pad_value': 0})
+ - ('pfcand_dz', {'length': 50, 'pad_mode': 'constant', 'center': 0, 'scale': 150, 'min': -5, 'max': 5, 'pad_value': 0})
+ - ('pfcand_dzsig', {'length': 50, 'pad_mode': 'constant', 'center': 0, 'scale': 0.7, 'min': -5, 'max': 5, 'pad_value': 0})
+ - ('pfcand_dxy', {'length': 50, 'pad_mode': 'constant', 'center': 0, 'scale': 270, 'min': -5, 'max': 5, 'pad_value': 0})
+ - ('pfcand_dxysig', {'length': 50, 'pad_mode': 'constant', 'center': 1.1, 'scale': 1, 'min': -5, 'max': 5, 'pad_value': 0})
+ - ('pfcand_btagEtaRel', {'length': 50, 'pad_mode': 'constant', 'center': 2.1, 'scale': 0.5, 'min': -5, 'max': 5, 'pad_value': 0})
+ - ('pfcand_btagPtRatio', {'length': 50, 'pad_mode': 'constant', 'center': 0, 'scale': 1, 'min': -5, 'max': 5, 'pad_value': 0})
+ - ('pfcand_btagPParRatio', {'length': 50, 'pad_mode': 'constant', 'center': 0, 'scale': 1, 'min': -5, 'max': 5, 'pad_value': 0})
+ - ('pfcand_mask', {'length': 50, 'pad_mode': 'constant', 'center': None, 'scale': 1, 'min': -5, 'max': 5, 'pad_value': 0})
+[2023-07-28 16:07:26,482] INFO: label_names: ('_label_',)
+[2023-07-28 16:07:26,482] INFO: observer_names: ()
+[2023-07-28 16:07:26,482] INFO: monitor_variables: ()
+[2023-07-28 16:07:26,482] INFO: reweight_method: flat
+[2023-07-28 16:07:26,482] INFO: reweight_basewgt: None
+[2023-07-28 16:07:26,482] INFO: reweight_branches: ('j_pt', 'j_eta')
+[2023-07-28 16:07:26,483] INFO: reweight_bins: ([15, 20, 26, 35, 46, 61, 80, 106, 141, 186, 247, 326, 432, 571, 756, 1000], [-2.5, -2.0, -1.5, -1.0, -0.5, 0.0, 0.5, 1.0, 1.5, 2.0, 2.5])
+[2023-07-28 16:07:26,483] INFO: reweight_classes: ('label_catB', 'label_catC', 'label_uds', 'label_g', 'label_undef')
+[2023-07-28 16:07:26,483] INFO: class_weights: [1, 1, 2.5, 5, 0.15]
+[2023-07-28 16:07:26,483] INFO: reweight_threshold: 15
+[2023-07-28 16:07:26,483] INFO: reweight_discard_under_overflow: True
+[2023-07-28 16:07:26,498] INFO: Network options: {}
+[2023-07-28 16:07:28,948] INFO: Warning: module EdgeConvBlock is treated as a zero-op.
+[2023-07-28 16:07:28,948] INFO: Warning: module Dropout is treated as a zero-op.
+[2023-07-28 16:07:28,948] INFO: Warning: module ParticleNet is treated as a zero-op.
+[2023-07-28 16:07:34,483] INFO: ParticleNet(
+  |0.37 M, 100.000% Params, 210.262 MMac, 100.000% MACs|
+  (bn_fts): BatchNorm1d(16, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True, |0.0 M, 0.009% Params, 1.6 KMac, 0.001% MACs|)
+  (edge_convs): ModuleList(
+    (0): EdgeConvBlock(
+      |0.012 M, 3.185% Params, 8.714 MMac, 4.144% MACs|
+      (convs): ModuleList(
+        (0): Conv2d(32, 64, kernel_size=(1, 1), stride=(1, 1), bias=False, |0.002 M, 0.554% Params, 1.638 MMac, 0.779% MACs|)
+        (1-2): 2 x Conv2d(64, 64, kernel_size=(1, 1), stride=(1, 1), bias=False, |0.004 M, 1.108% Params, 3.277 MMac, 1.558% MACs|)
+      )
+      (bns): ModuleList(
+        (0-2): 3 x BatchNorm2d(64, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True, |0.0 M, 0.035% Params, 102.4 KMac, 0.049% MACs|)
+      )
+      (acts): ModuleList(
+        (0-2): 3 x ReLU(|0.0 M, 0.000% Params, 51.2 KMac, 0.024% MACs|)
+      )
+      (sc): Conv1d(16, 64, kernel_size=(1,), stride=(1,), bias=False, |0.001 M, 0.277% Params, 51.2 KMac, 0.024% MACs|)
+      (sc_bn): BatchNorm1d(64, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True, |0.0 M, 0.035% Params, 6.4 KMac, 0.003% MACs|)
+      (sc_act): ReLU(|0.0 M, 0.000% Params, 3.2 KMac, 0.002% MACs|)
+    )
+    (1): EdgeConvBlock(
+      |0.058 M, 15.788% Params, 40.672 MMac, 19.343% MACs|
+      (convs): ModuleList(
+        (0-2): 3 x Conv2d(128, 128, kernel_size=(1, 1), stride=(1, 1), bias=False, |0.016 M, 4.432% Params, 13.107 MMac, 6.234% MACs|)
+      )
+      (bns): ModuleList(
+        (0-2): 3 x BatchNorm2d(128, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True, |0.0 M, 0.069% Params, 204.8 KMac, 0.097% MACs|)
+      )
+      (acts): ModuleList(
+        (0-2): 3 x ReLU(|0.0 M, 0.000% Params, 102.4 KMac, 0.049% MACs|)
+      )
+      (sc): Conv1d(64, 128, kernel_size=(1,), stride=(1,), bias=False, |0.008 M, 2.216% Params, 409.6 KMac, 0.195% MACs|)
+      (sc_bn): BatchNorm1d(128, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True, |0.0 M, 0.069% Params, 12.8 KMac, 0.006% MACs|)
+      (sc_act): ReLU(|0.0 M, 0.000% Params, 6.4 KMac, 0.003% MACs|)
+    )
+    (2): EdgeConvBlock(
+      |0.231 M, 62.597% Params, 160.806 MMac, 76.479% MACs|
+      (convs): ModuleList(
+        (0-2): 3 x Conv2d(256, 256, kernel_size=(1, 1), stride=(1, 1), bias=False, |0.066 M, 17.727% Params, 52.429 MMac, 24.935% MACs|)
+      )
+      (bns): ModuleList(
+        (0-2): 3 x BatchNorm2d(256, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True, |0.001 M, 0.138% Params, 409.6 KMac, 0.195% MACs|)
+      )
+      (acts): ModuleList(
+        (0-2): 3 x ReLU(|0.0 M, 0.000% Params, 204.8 KMac, 0.097% MACs|)
+      )
+      (sc): Conv1d(128, 256, kernel_size=(1,), stride=(1,), bias=False, |0.033 M, 8.863% Params, 1.638 MMac, 0.779% MACs|)
+      (sc_bn): BatchNorm1d(256, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True, |0.001 M, 0.138% Params, 25.6 KMac, 0.012% MACs|)
+      (sc_act): ReLU(|0.0 M, 0.000% Params, 12.8 KMac, 0.006% MACs|)
+    )
+  )
+  (fc): Sequential(
+    |0.068 M, 18.421% Params, 68.361 KMac, 0.033% MACs|
+    (0): Sequential(
+      |0.066 M, 17.796% Params, 66.048 KMac, 0.031% MACs|
+      (0): Linear(in_features=256, out_features=256, bias=True, |0.066 M, 17.796% Params, 65.792 KMac, 0.031% MACs|)
+      (1): ReLU(|0.0 M, 0.000% Params, 256.0 Mac, 0.000% MACs|)
+      (2): Dropout(p=0.1, inplace=False, |0.0 M, 0.000% Params, 0.0 Mac, 0.000% MACs|)
+    )
+    (1): Linear(in_features=256, out_features=9, bias=True, |0.002 M, 0.626% Params, 2.313 KMac, 0.001% MACs|)
+  )
+)
+[2023-07-28 16:07:34,494] INFO: Computational complexity:       210.26 MMac
+[2023-07-28 16:07:34,494] INFO: Number of parameters:           369.7 k 
+[2023-07-28 16:07:34,495] INFO: Using loss function CrossEntropyLoss() with options {}
+[2023-07-28 16:07:34,495] INFO: Optimizer options: {}
+[2023-07-28 16:07:34,570] INFO: --------------------------------------------------
+[2023-07-28 16:07:34,570] INFO: Epoch #0 training
+0it [00:00, ?it/s]/afs/cern.ch/user/a/aulee/.conda/envs/weaver/lib/python3.10/site-packages/torch/cuda/__init__.py:107: UserWarning: CUDA initialization: Unexpected error from cudaGetDeviceCount(). Did you run some cuda functions before calling NumCudaDevices() that might have already set an error? Error 34: CUDA driver is a stub library (Triggered internally at ../c10/cuda/CUDAFunctions.cpp:109.)
+  return torch._C._cuda_getDeviceCount() > 0
+=== Restarting DataIter train_worker0, seed=60232816 ===
+[2023-07-28 16:07:35,577] INFO: Restarted DataIter train_worker0, load_range=(0.6946362750852539, 0.774636275085254), file_list:
+{
+  "_": [
+    "test_TTBAR.root"
+  ]
+}
+0it [00:01, ?it/s]
+Traceback (most recent call last):
+  File "/afs/cern.ch/user/a/aulee/.conda/envs/weaver/bin/weaver", line 8, in <module>
+    sys.exit(main())
+  File "/afs/cern.ch/user/a/aulee/.conda/envs/weaver/lib/python3.10/site-packages/weaver/train.py", line 931, in main
+    _main(args)
+  File "/afs/cern.ch/user/a/aulee/.conda/envs/weaver/lib/python3.10/site-packages/weaver/train.py", line 784, in _main
+    train(model, loss_func, opt, scheduler, train_loader, dev, epoch,
+  File "/afs/cern.ch/user/a/aulee/.conda/envs/weaver/lib/python3.10/site-packages/weaver/utils/nn/tools.py", line 45, in train_classification
+    for X, y, _ in tq:
+  File "/afs/cern.ch/user/a/aulee/.conda/envs/weaver/lib/python3.10/site-packages/tqdm/std.py", line 1178, in __iter__
+    for obj in iterable:
+  File "/afs/cern.ch/user/a/aulee/.conda/envs/weaver/lib/python3.10/site-packages/torch/utils/data/dataloader.py", line 633, in __next__
+    data = self._next_data()
+  File "/afs/cern.ch/user/a/aulee/.conda/envs/weaver/lib/python3.10/site-packages/torch/utils/data/dataloader.py", line 1345, in _next_data
+    return self._process_data(data)
+  File "/afs/cern.ch/user/a/aulee/.conda/envs/weaver/lib/python3.10/site-packages/torch/utils/data/dataloader.py", line 1371, in _process_data
+    data.reraise()
+  File "/afs/cern.ch/user/a/aulee/.conda/envs/weaver/lib/python3.10/site-packages/torch/_utils.py", line 644, in reraise
+    raise exception
+RuntimeError: Caught RuntimeError in DataLoader worker process 0.
+Original Traceback (most recent call last):
+  File "/afs/cern.ch/user/a/aulee/.conda/envs/weaver/lib/python3.10/site-packages/weaver/utils/dataset.py", line 199, in __next__
+    i = self.indices[self.cursor]
+IndexError: list index out of range
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/afs/cern.ch/user/a/aulee/.conda/envs/weaver/lib/python3.10/site-packages/torch/utils/data/_utils/worker.py", line 308, in _worker_loop
+    data = fetcher.fetch(index)
+  File "/afs/cern.ch/user/a/aulee/.conda/envs/weaver/lib/python3.10/site-packages/torch/utils/data/_utils/fetch.py", line 32, in fetch
+    data.append(next(self.dataset_iter))
+  File "/afs/cern.ch/user/a/aulee/.conda/envs/weaver/lib/python3.10/site-packages/weaver/utils/dataset.py", line 217, in __next__
+    self.table, self.indices = self.prefetch.result()
+  File "/afs/cern.ch/user/a/aulee/.conda/envs/weaver/lib/python3.10/concurrent/futures/_base.py", line 446, in result
+    return self.__get_result()
+  File "/afs/cern.ch/user/a/aulee/.conda/envs/weaver/lib/python3.10/concurrent/futures/_base.py", line 391, in __get_result
+    raise self._exception
+  File "/afs/cern.ch/user/a/aulee/.conda/envs/weaver/lib/python3.10/concurrent/futures/thread.py", line 58, in run
+    result = self.fn(*self.args, **self.kwargs)
+  File "/afs/cern.ch/user/a/aulee/.conda/envs/weaver/lib/python3.10/site-packages/weaver/utils/dataset.py", line 113, in _load_next
+    table, indices = _preprocess(table, data_config, options)
+  File "/afs/cern.ch/user/a/aulee/.conda/envs/weaver/lib/python3.10/site-packages/weaver/utils/dataset.py", line 94, in _preprocess
+    _check_labels(table)
+  File "/afs/cern.ch/user/a/aulee/.conda/envs/weaver/lib/python3.10/site-packages/weaver/utils/dataset.py", line 80, in _check_labels
+    raise RuntimeError('Inconsistent label definition: some of the entries are assigned to multiple classes!')
+RuntimeError: Inconsistent label definition: some of the entries are assigned to multiple classes!
