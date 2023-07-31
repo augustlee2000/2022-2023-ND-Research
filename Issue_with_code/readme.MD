@@ -16,4 +16,4 @@ In both error logs we have two different errors "IndexError: list index out of r
 
 ### Current thought processes
 
-I think my best best would be to try to resolve the "IndexError: list index out of range" and maybe if I solve that issue I would help to reslove the "RuntimeError: Inconsistent label definition: some of the entries are assigned to multiple classes!" error.
+I think my best bet would be to try to resolve the "IndexError: list index out of range" and maybe if I solve that issue I would help to reslove the "RuntimeError: Inconsistent label definition: some of the entries are assigned to multiple classes!" error.
