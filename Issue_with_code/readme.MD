@@ -17,3 +17,7 @@ In both error logs we have two different errors "IndexError: list index out of r
 ### Current thought processes
 
 I think my best bet would be to try to resolve the "IndexError: list index out of range" and maybe if I solve that issue I would help to reslove the "RuntimeError: Inconsistent label definition: some of the entries are assigned to multiple classes!" error. Earth has way to submit GPU jobs using a batch system (Univa Grid Engine) but I'm not sure if the issue would be resloved if using a GPU?
+
+### Fixing the "IndexError: list index out of range" error
+
+To fix this error we decided to full remove all the label and create two new label; label_b and label_notb. Where label_b (j_nBHadrons ==1) and label_notb (j_nBHadrons !=1). This obviously removed alot of funationality of weaver but allows us to contiune. I am now getting multiple type of errors within the training and validation section
