@@ -612,7 +612,6 @@ void AK4JetNtupleProducer::analyze(const edm::Event& iEvent, const edm::EventSet
 
     event_no = iEvent.id().event();
 
-    ak4_jet_idx++;
 
 
     n_mu=0;
@@ -683,7 +682,7 @@ void AK4JetNtupleProducer::analyze(const edm::Event& iEvent, const edm::EventSet
     auto ak8_label = ak8_pdseudojet_match.flavorLabel(j, *gencands_, dR_);
 
 
-    const std::vector<fastjet::PseudoJet> constituents = j.constituents();
+    //const std::vector<fastjet::PseudoJet> constituents = j.constituents();
     for (auto &cand : constituents) {
       auto *reco_cand = dynamic_cast<const Run3ScoutingParticle*> (&pfcands_->at(cand.user_index()));
       float trk_px = reco_cand->trk_pt() * cos(reco_cand->trk_phi());
@@ -739,12 +738,13 @@ void AK4JetNtupleProducer::analyze(const edm::Event& iEvent, const edm::EventSet
 
     ak8_jet_idx++;
 
-
-    tree->Fill();	
-    clearVars();
+  
+  clearVars();
   }
- 
-
+  ak4_jet_idx++;
+  event_no = iEvent.id().event();
+  tree->Fill();	
+  clearVars();
 
   }
 }
@@ -832,6 +832,18 @@ void AK4JetNtupleProducer::beginJob() {
 }
 
 void AK4JetNtupleProducer::endJob() {
+}
+
+void AK4JetNtupleProducer::beginRun(edm::Run const& iRun, edm::EventSetup const& iSetup) {
+}
+
+void AK4JetNtupleProducer::endRun(edm::Run const&, edm::EventSetup const&) {
+}
+
+void AK4JetNtupleProducer::beginLuminosityBlock(edm::LuminosityBlock const& iLumi, edm::EventSetup const&) {
+}
+
+void AK4JetNtupleProducer::endLuminosityBlock(edm::LuminosityBlock const&, edm::EventSetup const&) {
 }
 
 void AK4JetNtupleProducer::fillDescriptions(edm::ConfigurationDescriptions& descriptions) {
