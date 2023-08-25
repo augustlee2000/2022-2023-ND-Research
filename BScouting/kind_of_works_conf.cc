@@ -134,6 +134,7 @@ private:
   bool isQCD_ = false;
 
   float dR_= 0.4;
+  float fdR_ = 0.8;
 
   const static int 	max_mu = 1000;
   UInt_t n_mu;
@@ -487,51 +488,55 @@ void AK4JetNtupleProducer::analyze(const edm::Event& iEvent, const edm::EventSet
     pfcand_i++;
   }
 
-  fastjet::JetDefinition ak8_def = fastjet::JetDefinition(fastjet::antikt_algorithm, dR_);
+  fastjet::JetDefinition ak8_def = fastjet::JetDefinition(fastjet::antikt_algorithm, fdR_);
+  fastjet::GhostedAreaSpec farea_spec(5.0,1,0.01);
+  fastjet::AreaDefinition farea_def(fastjet::active_area, farea_spec);
 
   // Substructure
   double sd_z_cut = 0.10;
   double sd_beta = 0;
-  fastjet::contrib::SoftDrop sd_groomer = fastjet::contrib::SoftDrop(sd_beta, sd_z_cut, dR_);
+  fastjet::contrib::SoftDrop sd_groomer = fastjet::contrib::SoftDrop(sd_beta, sd_z_cut, fdR_);
   fastjet::contrib::EnergyCorrelatorN2 N2 = fastjet::contrib::EnergyCorrelatorN2(1.0);
 
-  fastjet::ClusterSequenceArea ak8_cs(fj_part, ak8_def, area_def);
+  fastjet::ClusterSequenceArea ak8_cs(fj_part, ak8_def, farea_def);
   std::vector<fastjet::PseudoJet> ak8_jets = fastjet::sorted_by_pt(ak8_cs.inclusive_jets(170.0));
 
   // Match jet-gen jet
   std::map<int, reco::GenJet> fgenmatch_resultmap;
+  std::vector<int> fgenmatch_unmatched;
   std::vector<std::tuple<int, int, float> > parlist;
 
   int ak8_jet_idx = 0;
+  //good from here
 
   for(unsigned int i=0; i<ak8_jets.size(); i++) {
-    bool found_match = false;
+    bool ffound_match = false;
     for(unsigned int j=0; j<fgenjets_->size(); j++) {
-      float dR = reco::deltaR(ak8_jets[i].eta(), ak8_jets[i].phi(), (*fgenjets_)[j].eta(), (*fgenjets_)[j].phi());
-      if(dR < dR_) {
-        parlist.push_back(std::make_tuple(i, j, dR));
-        found_match = true;
+      float fdR = reco::deltaR(ak8_jets[i].eta(), ak8_jets[i].phi(), (*fgenjets_)[j].eta(), (*fgenjets_)[j].phi());
+      if(fdR < fdR_) {
+        parlist.push_back(std::make_tuple(i, j, fdR));
+        ffound_match = true;
       }
     }
     ak8_jet_idx++;
-    if(!found_match) {
-       genmatch_unmatched.push_back(i);
+    if(!ffound_match) {
+       fgenmatch_unmatched.push_back(i);
     }
   }
 
-  std::sort(parlist.begin(), parlist.end(), [](std::tuple<int, int, float> t1, std::tuple<int, int, float> t2){ return std::get<2>(t1) < std::get<2>(t2); });
+  // std::sort(parlist.begin(), parlist.end(), [](std::tuple<int, int, float> t1, std::tuple<int, int, float> t2){ return std::get<2>(t1) < std::get<2>(t2); });
 
-  while(parlist.size() > 0) {
-    reco::GenJet fgenjet_assn = (*fgenjets_)[std::get<1>(parlist[0])];
-    fgenmatch_resultmap[std::get<0>(parlist[0])] = fgenjet_assn;
-    for(unsigned int k=1; k<parlist.size(); k++) {
-      if(std::get<0>(parlist[k]) == std::get<0>(parlist[0]) ||
-         std::get<1>(parlist[k]) == std::get<1>(parlist[0])) {
-        parlist.erase(parlist.begin() + k);
-      }
-    }
-    parlist.erase(parlist.begin());
-  }
+  // while(parlist.size() > 0) {
+  //   reco::GenJet fgenjet_assn = (*fgenjets_)[std::get<1>(parlist[0])];
+  //   fgenmatch_resultmap[std::get<0>(parlist[0])] = fgenjet_assn;
+  //   for(unsigned int k=1; k<parlist.size(); k++) {
+  //     if(std::get<0>(parlist[k]) == std::get<0>(parlist[0]) ||
+  //        std::get<1>(parlist[k]) == std::get<1>(parlist[0])) {
+  //       parlist.erase(parlist.begin() + k);
+  //     }
+  //   }
+  //   parlist.erase(parlist.begin());
+  // }
   
   ak4_jet_idx = 0;
   for(auto &j: ak4_jets) {
@@ -675,11 +680,11 @@ void AK4JetNtupleProducer::analyze(const edm::Event& iEvent, const edm::EventSet
     }
 
 
-  ak8_jet_idx = 0;
+ /*  ak8_jet_idx = 0;
   for(auto &j: ak8_jets) {
 
     // Flavour matching
-    auto ak8_label = ak8_pdseudojet_match.flavorLabel(j, *gencands_, dR_);
+    auto ak8_label = ak8_pdseudojet_match.flavorLabel(j, *gencands_, fdR_);
 
 
     //const std::vector<fastjet::PseudoJet> constituents = j.constituents();
@@ -728,7 +733,7 @@ void AK4JetNtupleProducer::analyze(const edm::Event& iEvent, const edm::EventSet
 
     fj_gen_mass = (ak8_label.first < FatJetMatching<fastjet::PseudoJet>::QCD_all && ak8_label.second) ? ak8_label.second->mass() : 0;
 
-    if (std::find(genmatch_unmatched.begin(), genmatch_unmatched.end(), ak8_jet_idx) != genmatch_unmatched.end()) {
+    if (std::find(fgenmatch_unmatched.begin(), fgenmatch_unmatched.end(), ak8_jet_idx) != fgenmatch_unmatched.end()) {
       fj_genjet_sdmass = -99;
     } else {
       fj_genjet_sdmass = fgenmatch_resultmap[ak8_jet_idx].mass();
@@ -739,8 +744,8 @@ void AK4JetNtupleProducer::analyze(const edm::Event& iEvent, const edm::EventSet
     ak8_jet_idx++;
 
   
-  clearVars();
-  }
+  clearVars(); */
+  //}
   ak4_jet_idx++;
   event_no = iEvent.id().event();
   tree->Fill();	
