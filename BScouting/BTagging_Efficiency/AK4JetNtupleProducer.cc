@@ -1,3 +1,4 @@
+
 #include <vector>
 
 #include "FWCore/Framework/interface/Frameworkfwd.h"
@@ -96,8 +97,7 @@ private:
 
   std::vector<Float16_t> pfcand_pt_log_nopuppi;
   std::vector<Float16_t> pfcand_e_log_nopuppi;
-  std::vector<Float16_t> pfcand_etarel;
-  std::vector<Float16_t> pfcand_phirel;
+  std::vector<Float16_t> pfcand_absphi;
   std::vector<Float16_t> pfcand_abseta;
   std::vector<Float16_t> pfcand_charge;
   std::vector<Float16_t> pfcand_isEl;
@@ -112,16 +112,15 @@ private:
   std::vector<Float16_t> pfcand_dzsig;
   std::vector<Float16_t> pfcand_dxy;
   std::vector<Float16_t> pfcand_dxysig;
-  std::vector<Float16_t> pfcand_btagEtaRel;
-  std::vector<Float16_t> pfcand_btagPtRatio;
-  std::vector<Float16_t> pfcand_btagPParRatio;
+  std::vector<std::vector<Float16_t>> pfcand_index;
 
   std::vector<Float16_t> j_pt;
   std::vector<Float16_t> j_eta;
   std::vector<Float16_t> j_phi;
   std::vector<Float16_t> j_mass;
   int j_no;
-  int j_npfcands;
+  int useless;
+  std::vector<UInt_t> j_npfcands;
 
   std::vector<UInt_t> j_nCHadrons;
   std::vector<UInt_t> j_nBHadrons;
@@ -205,7 +204,10 @@ private:
   std::vector<Float16_t> fj_msd;
   std::vector<Float16_t> fj_n2b1;
   int fj_no;
-  int fj_npfcands;
+  
+  std::vector<UInt_t> fj_npfcands;
+  std::vector<std::vector<Float16_t> > f_pfcand_index;
+
 
   std::vector<Float16_t> fj_gen_mass;
   std::vector<Float16_t> fj_genjet_sdmass;
@@ -249,8 +251,7 @@ AK4JetNtupleProducer::AK4JetNtupleProducer(const edm::ParameterSet& iConfig):
 
   tree->Branch("pfcand_pt_log_nopuppi", &pfcand_pt_log_nopuppi);
   tree->Branch("pfcand_e_log_nopuppi", &pfcand_e_log_nopuppi);
-  tree->Branch("pfcand_etarel", &pfcand_etarel);
-  tree->Branch("pfcand_phirel", &pfcand_phirel);
+  tree->Branch("pfcand_absphi", &pfcand_absphi);
   tree->Branch("pfcand_abseta", &pfcand_abseta);
   tree->Branch("pfcand_charge", &pfcand_charge);
   tree->Branch("pfcand_isEl", &pfcand_isEl);
@@ -265,9 +266,7 @@ AK4JetNtupleProducer::AK4JetNtupleProducer(const edm::ParameterSet& iConfig):
   tree->Branch("pfcand_dzsig", &pfcand_dzsig);
   tree->Branch("pfcand_dxy", &pfcand_dxy);
   tree->Branch("pfcand_dxysig", &pfcand_dxysig);
-  tree->Branch("pfcand_btagEtaRel", &pfcand_btagEtaRel);
-  tree->Branch("pfcand_btagPtRatio", &pfcand_btagPtRatio);
-  tree->Branch("pfcand_btagPParRatio", &pfcand_btagPParRatio);
+  tree->Branch("pfcand_index", &pfcand_index);
 
   tree->Branch("j_pt", &j_pt);
   tree->Branch("j_eta", &j_eta);
@@ -344,6 +343,7 @@ AK4JetNtupleProducer::AK4JetNtupleProducer(const edm::ParameterSet& iConfig):
 
   tree->Branch("PFMet_Pt", &pfMet );
   tree->Branch("PFMet_Phi", &pfMetPhi );
+  
 
   tree->Branch("fj_pt", &fj_pt);
   tree->Branch("fj_eta", &fj_eta);
@@ -353,6 +353,7 @@ AK4JetNtupleProducer::AK4JetNtupleProducer(const edm::ParameterSet& iConfig):
   tree->Branch("fj_n2b1", &fj_n2b1);
   tree->Branch("fj_no", &fj_no);
   tree->Branch("fj_npfcands", &fj_npfcands);
+  tree->Branch("f_pfcand_index", &f_pfcand_index);
 
   tree->Branch("fj_gen_mass", &fj_gen_mass);
   tree->Branch("fj_genjet_sdmass", &fj_genjet_sdmass);
@@ -409,7 +410,38 @@ void AK4JetNtupleProducer::analyze(const edm::Event& iEvent, const edm::EventSet
   iEvent.getByToken(pfMetPhiToken, pfMetPhi_);
   pfMetPhi = *pfMetPhi_;
 
+  //int pfcand_i = 0;
+  for (auto pfcands_iter = pfcands_->begin(); pfcands_iter != pfcands_->end(); ++pfcands_iter) {
+    float pfcands_iter_p = pfcands_iter->pt() * cosh(pfcands_iter->eta());
+    auto rcm = particletable_->particle(HepPDT::ParticleID(pfcands_iter->pdgId())) != nullptr
+                        ? particletable_->particle(HepPDT::ParticleID(pfcands_iter->pdgId()))->mass()
+                        : -99.f;
+      if (rcm < -90) continue;
 
+    pfcand_e_log_nopuppi.push_back(log(sqrt(pfcands_iter_p*pfcands_iter_p + rcm*rcm)));
+    pfcand_pt_log_nopuppi.push_back(log(pfcands_iter->pt()));
+    pfcand_absphi.push_back(pfcands_iter->phi());
+    pfcand_abseta.push_back(pfcands_iter->eta());
+    if (isNeutralPdg(pfcands_iter->pdgId())) {
+      pfcand_charge.push_back(0);
+    } else {
+       pfcand_charge.push_back(abs(pfcands_iter->pdgId())/pfcands_iter->pdgId());
+    }
+    pfcand_isEl.push_back(abs(pfcands_iter->pdgId()) == 11);
+    pfcand_isMu.push_back(abs(pfcands_iter->pdgId()) == 13);
+    pfcand_isGamma.push_back(abs(pfcands_iter->pdgId()) == 22);
+    pfcand_isChargedHad.push_back(abs(pfcands_iter->pdgId()) == 211);
+    pfcand_isNeutralHad.push_back(abs(pfcands_iter->pdgId()) == 130);
+    pfcand_lostInnerHits.push_back(pfcands_iter->lostInnerHits());
+    pfcand_normchi2.push_back(pfcands_iter->normchi2());
+    pfcand_quality.push_back(pfcands_iter->quality());
+    pfcand_dz.push_back(pfcands_iter->dz());
+    pfcand_dzsig.push_back(pfcands_iter->dzsig());
+    pfcand_dxy.push_back(pfcands_iter->dxy());
+    pfcand_dxysig.push_back(pfcands_iter->dxysig());
+
+
+  }
 
 
   // Create jets
@@ -434,7 +466,7 @@ void AK4JetNtupleProducer::analyze(const edm::Event& iEvent, const edm::EventSet
   fastjet::AreaDefinition area_def(fastjet::active_area, area_spec);
 
   fastjet::ClusterSequenceArea ak4_cs(j_part, ak4_def, area_def);
-  std::vector<fastjet::PseudoJet> ak4_jets = fastjet::sorted_by_pt(ak4_cs.inclusive_jets(170.0));
+  std::vector<fastjet::PseudoJet> ak4_jets = fastjet::sorted_by_pt(ak4_cs.inclusive_jets(15.0));
 
   // Match jet-gen jet
   std::map<int, reco::JetFlavourInfo> genmatch_resultmap;
@@ -510,15 +542,10 @@ void AK4JetNtupleProducer::analyze(const edm::Event& iEvent, const edm::EventSet
   int ak8_jet_idx = 0;
   //good from here
 
-
-  std::cout<<"This EVENT: ---> nAK8: "<<ak8_jets.size()<<" nGenJet: "<<fgenjets_->size()<<"\n";
   for(unsigned int i=0; i<ak8_jets.size(); i++) {
     bool ffound_match = false;
-    std::cout<<"!!!! ---> "<<i<<"\n";
     for(unsigned int j=0; j<fgenjets_->size(); j++) {
-      std::cout<<"???? ---> "<<j<<"\n";
       float fdR = reco::deltaR(ak8_jets[i].eta(), ak8_jets[i].phi(), (*fgenjets_)[j].eta(), (*fgenjets_)[j].phi());
-      std::cout<<"fdR: "<<fdR<<"\n";
       if(fdR < fdR_) {
         parlist.push_back(std::make_tuple(i, j, fdR));
         ffound_match = true;
@@ -609,143 +636,108 @@ void AK4JetNtupleProducer::analyze(const edm::Event& iEvent, const edm::EventSet
 
   
   ak4_jet_idx = 0;
+  j_no = 0;
   for(auto &j: ak4_jets) {
 
-    float etasign = j.eta() > 0 ? 1 : -1;
-    float jet_px = j.pt() * cos(j.phi());
-    float jet_py = j.pt() * sin(j.phi());
-    float jet_pz = j.pt() * sinh(j.eta());
-    math::XYZVector jet_dir_temp(jet_px, jet_py, jet_pz);
-    math::XYZVector jet_dir = jet_dir_temp.Unit();
-    TVector3 jet_dir3(jet_px, jet_py, jet_pz);
-
-    const std::vector<fastjet::PseudoJet> constituents = j.constituents();
-    for (auto &cand : constituents) {
-      auto *reco_cand = dynamic_cast<const Run3ScoutingParticle*> (&pfcands_->at(cand.user_index()));
-      float trk_px = reco_cand->trk_pt() * cos(reco_cand->trk_phi());
-      float trk_py = reco_cand->trk_pt() * sin(reco_cand->trk_phi());
-      float trk_pz = reco_cand->trk_pt() * sinh(reco_cand->trk_eta());
-      math::XYZVector track_mom(trk_px, trk_py, trk_pz);
-      TVector3 track_mom3(trk_px, trk_py, trk_pz);
-      double track_mag = sqrt(trk_px * trk_px + trk_py * trk_py + trk_pz * trk_pz);
-
-      float reco_cand_p = reco_cand->pt() * cosh(reco_cand->eta());
-      auto rcm = particletable_->particle(HepPDT::ParticleID(reco_cand->pdgId())) != nullptr
-                        ? particletable_->particle(HepPDT::ParticleID(reco_cand->pdgId()))->mass()
-                        : -99.f;
-      if (rcm < -90) continue;
-
-      pfcand_e_log_nopuppi.push_back(log(sqrt(reco_cand_p*reco_cand_p + rcm*rcm)));
-      pfcand_pt_log_nopuppi.push_back(log(reco_cand->pt()));
-      pfcand_etarel.push_back(etasign * (reco_cand->eta() - j.eta()));
-      pfcand_phirel.push_back(deltaPhi(reco_cand->phi(), j.phi()));
-      pfcand_abseta.push_back(abs(reco_cand->eta()));
-      if (isNeutralPdg(reco_cand->pdgId())) {
-         pfcand_charge.push_back(0);
-      } else {
-         pfcand_charge.push_back(abs(reco_cand->pdgId())/reco_cand->pdgId());
+    if (abs(j.eta())< 2.5){
+      j_no++;
+      const std::vector<fastjet::PseudoJet> constituents = j.constituents();
+      std::vector<Float16_t> user_index_vector;
+      for (auto &cand : constituents) {
+        user_index_vector.push_back(cand.user_index());
       }
-      pfcand_isEl.push_back(abs(reco_cand->pdgId()) == 11);
-      pfcand_isMu.push_back(abs(reco_cand->pdgId()) == 13);
-      pfcand_isGamma.push_back(abs(reco_cand->pdgId()) == 22);
-      pfcand_isChargedHad.push_back(abs(reco_cand->pdgId()) == 211);
-      pfcand_isNeutralHad.push_back(abs(reco_cand->pdgId()) == 130);
-      pfcand_lostInnerHits.push_back(reco_cand->lostInnerHits());
-      pfcand_normchi2.push_back(reco_cand->normchi2());
-      pfcand_quality.push_back(reco_cand->quality());
-      pfcand_dz.push_back(reco_cand->dz());
-      pfcand_dzsig.push_back(reco_cand->dzsig());
-      pfcand_dxy.push_back(reco_cand->dxy());
-      pfcand_dxysig.push_back(reco_cand->dxysig());
-      pfcand_btagEtaRel.push_back(reco::btau::etaRel(jet_dir, track_mom));
-      pfcand_btagPtRatio.push_back(track_mom3.Perp(jet_dir3) / track_mag);
-      pfcand_btagPParRatio.push_back(jet_dir.Dot(track_mom) / track_mag);
+      pfcand_index.push_back(user_index_vector);
+      user_index_vector.clear();
+
+      j_pt.push_back(j.pt());
+      j_eta.push_back(j.eta());
+      j_phi.push_back(j.phi());
+      j_mass.push_back(j.m());
+
+      //should be pushed outside the loop to save ram
+      //j_no = ak4_jets.size();
+      j_npfcands.push_back(constituents.size());
+      sample_isQCD = isQCD_;
+
+      if (std::find(genmatch_unmatched.begin(), genmatch_unmatched.end(), ak4_jet_idx) != genmatch_unmatched.end()) {
+        j_nCHadrons.push_back(50);
+        j_nBHadrons.push_back(50);
+        j_partonFlavour.push_back(50);
+        j_hadronFlavour.push_back(50);
+      } else {
+        reco::JetFlavourInfo flavJet = genmatch_resultmap[ak4_jet_idx];
+        j_nCHadrons.push_back(flavJet.getcHadrons().size());
+        j_nBHadrons.push_back(flavJet.getbHadrons().size());
+        j_partonFlavour.push_back(flavJet.getPartonFlavour());
+        j_hadronFlavour.push_back(flavJet.getHadronFlavour());
+      }
+
+      event_no = iEvent.id().event();
     }
-
-    j_pt.push_back(j.pt());
-    j_eta.push_back(j.eta());
-    j_phi.push_back(j.phi());
-    j_mass.push_back(j.m());
-
-    //should be pushed outside the loop to save ram
-    j_no = ak4_jets.size();
-    j_npfcands = constituents.size();
-    sample_isQCD = isQCD_;
-
-    if (std::find(genmatch_unmatched.begin(), genmatch_unmatched.end(), ak4_jet_idx) != genmatch_unmatched.end()) {
-      j_nCHadrons.push_back(-99);
-      j_nBHadrons.push_back(-99);
-      j_partonFlavour.push_back(-99);
-      j_hadronFlavour.push_back(-99);
-    } else {
-      reco::JetFlavourInfo flavJet = genmatch_resultmap[ak4_jet_idx];
-      j_nCHadrons.push_back(flavJet.getcHadrons().size());
-      j_nBHadrons.push_back(flavJet.getbHadrons().size());
-      j_partonFlavour.push_back(flavJet.getPartonFlavour());
-      j_hadronFlavour.push_back(flavJet.getHadronFlavour());
+    else{
+      useless = 0;
     }
-
-    event_no = iEvent.id().event();
     ak4_jet_idx++;
   }
 
   ak8_jet_idx = 0;
+  fj_no = 0;
   for(auto &j: ak8_jets) {
 
-    // Flavour matching
-    auto ak8_label = ak8_pdseudojet_match.flavorLabel(j, *gencands_, fdR_);
+    if (abs(j.eta())< 2.5){
+      // Flavour matching
+      fj_no++;
+      auto ak8_label = ak8_pdseudojet_match.flavorLabel(j, *gencands_, fdR_);
 
+      const std::vector<fastjet::PseudoJet> constituents = j.constituents();
+      std::vector<Float16_t> f_user_index_vector;
+      for (auto &cand : constituents) {
+        f_user_index_vector.push_back(cand.user_index());
+      }
 
-    const std::vector<fastjet::PseudoJet> constituents = j.constituents();
-    for (auto &cand : constituents) {
-      auto *reco_cand = dynamic_cast<const Run3ScoutingParticle*> (&pfcands_->at(cand.user_index()));
-      float trk_px = reco_cand->trk_pt() * cos(reco_cand->trk_phi());
-      float trk_py = reco_cand->trk_pt() * sin(reco_cand->trk_phi());
-      float trk_pz = reco_cand->trk_pt() * sinh(reco_cand->trk_eta());
-      math::XYZVector track_mom(trk_px, trk_py, trk_pz);
-      TVector3 track_mom3(trk_px, trk_py, trk_pz);
+      f_pfcand_index.push_back(f_user_index_vector);
+      f_user_index_vector.clear();
 
-      auto rcm = particletable_->particle(HepPDT::ParticleID(reco_cand->pdgId())) != nullptr
-                        ? particletable_->particle(HepPDT::ParticleID(reco_cand->pdgId()))->mass()
-                        : -99.f;
-      if (rcm < -90) continue;
+      
+      fj_pt.push_back(j.pt());
+      fj_eta.push_back(j.eta());
+      fj_phi.push_back(j.phi());
+      fj_mass.push_back(j.m());
+
+      fastjet::PseudoJet sd_ak8 = sd_groomer(j);
+      fj_msd.push_back(sd_ak8.m());
+      fj_n2b1.push_back(N2(sd_ak8));
+
+      //could be pushed out the loop
+      //fj_no = ak8_jets.size();
+      fj_npfcands.push_back(constituents.size());
+
+      label_Top_bcq.push_back((ak8_label.first == FatJetMatching<fastjet::PseudoJet>::Top_bcq));
+      label_Top_bqq.push_back((ak8_label.first == FatJetMatching<fastjet::PseudoJet>::Top_bqq));
+      label_Top_bc.push_back((ak8_label.first == FatJetMatching<fastjet::PseudoJet>::Top_bc));
+      label_Top_bq.push_back((ak8_label.first == FatJetMatching<fastjet::PseudoJet>::Top_bq));
+      label_W_cq.push_back((ak8_label.first == FatJetMatching<fastjet::PseudoJet>::W_cq));
+      label_W_qq.push_back((ak8_label.first == FatJetMatching<fastjet::PseudoJet>::W_qq));
+      label_Z_bb.push_back((ak8_label.first == FatJetMatching<fastjet::PseudoJet>::Z_bb));
+      label_Z_cc.push_back((ak8_label.first == FatJetMatching<fastjet::PseudoJet>::Z_cc));
+      label_Z_qq.push_back((ak8_label.first == FatJetMatching<fastjet::PseudoJet>::Z_qq));
+      label_H_bb.push_back((ak8_label.first == FatJetMatching<fastjet::PseudoJet>::H_bb));
+      label_H_cc.push_back((ak8_label.first == FatJetMatching<fastjet::PseudoJet>::H_cc));
+      label_H_qqqq.push_back((ak8_label.first == FatJetMatching<fastjet::PseudoJet>::H_qqqq));
+      label_H_tautau.push_back((ak8_label.first == FatJetMatching<fastjet::PseudoJet>::H_tautau));
+      label_H_qq.push_back((ak8_label.first == FatJetMatching<fastjet::PseudoJet>::H_qq));
+      label_QCD_all.push_back((ak8_label.first == FatJetMatching<fastjet::PseudoJet>::QCD_all));
+
+      fj_gen_mass.push_back((ak8_label.first < FatJetMatching<fastjet::PseudoJet>::QCD_all && ak8_label.second) ? ak8_label.second->mass() : 0);
+
+      if (std::find(fgenmatch_unmatched.begin(), fgenmatch_unmatched.end(), ak8_jet_idx) != fgenmatch_unmatched.end()) {
+        fj_genjet_sdmass.push_back(-99);
+      } else {
+        fj_genjet_sdmass.push_back(fgenmatch_resultmap[ak8_jet_idx].mass());
+      }
     }
-
-    fj_pt.push_back(j.pt());
-    fj_eta.push_back(j.eta());
-    fj_phi.push_back(j.phi());
-    fj_mass.push_back(j.m());
-
-    fastjet::PseudoJet sd_ak8 = sd_groomer(j);
-    fj_msd.push_back(sd_ak8.m());
-    fj_n2b1.push_back(N2(sd_ak8));
-
-    //could be pushed out the loop
-    fj_no = ak8_jets.size();
-    fj_npfcands = constituents.size();
-
-    label_Top_bcq.push_back((ak8_label.first == FatJetMatching<fastjet::PseudoJet>::Top_bcq));
-    label_Top_bqq.push_back((ak8_label.first == FatJetMatching<fastjet::PseudoJet>::Top_bqq));
-    label_Top_bc.push_back((ak8_label.first == FatJetMatching<fastjet::PseudoJet>::Top_bc));
-    label_Top_bq.push_back((ak8_label.first == FatJetMatching<fastjet::PseudoJet>::Top_bq));
-    label_W_cq.push_back((ak8_label.first == FatJetMatching<fastjet::PseudoJet>::W_cq));
-    label_W_qq.push_back((ak8_label.first == FatJetMatching<fastjet::PseudoJet>::W_qq));
-    label_Z_bb.push_back((ak8_label.first == FatJetMatching<fastjet::PseudoJet>::Z_bb));
-    label_Z_cc.push_back((ak8_label.first == FatJetMatching<fastjet::PseudoJet>::Z_cc));
-    label_Z_qq.push_back((ak8_label.first == FatJetMatching<fastjet::PseudoJet>::Z_qq));
-    label_H_bb.push_back((ak8_label.first == FatJetMatching<fastjet::PseudoJet>::H_bb));
-    label_H_cc.push_back((ak8_label.first == FatJetMatching<fastjet::PseudoJet>::H_cc));
-    label_H_qqqq.push_back((ak8_label.first == FatJetMatching<fastjet::PseudoJet>::H_qqqq));
-    label_H_tautau.push_back((ak8_label.first == FatJetMatching<fastjet::PseudoJet>::H_tautau));
-    label_H_qq.push_back((ak8_label.first == FatJetMatching<fastjet::PseudoJet>::H_qq));
-    label_QCD_all.push_back((ak8_label.first == FatJetMatching<fastjet::PseudoJet>::QCD_all));
-
-    fj_gen_mass.push_back((ak8_label.first < FatJetMatching<fastjet::PseudoJet>::QCD_all && ak8_label.second) ? ak8_label.second->mass() : 0);
-
-    if (std::find(fgenmatch_unmatched.begin(), fgenmatch_unmatched.end(), ak8_jet_idx) != fgenmatch_unmatched.end()) {
-      fj_genjet_sdmass.push_back(-99);
-    } else {
-      fj_genjet_sdmass.push_back(fgenmatch_resultmap[ak8_jet_idx].mass());
+    else {
+      useless =0;
     }
 
     ak8_jet_idx++;
@@ -758,8 +750,7 @@ void AK4JetNtupleProducer::analyze(const edm::Event& iEvent, const edm::EventSet
 void AK4JetNtupleProducer::clearVars(){
   pfcand_pt_log_nopuppi.clear();
   pfcand_e_log_nopuppi.clear();
-  pfcand_etarel.clear();
-  pfcand_phirel.clear();
+  pfcand_absphi.clear();
   pfcand_abseta.clear();
   pfcand_charge.clear();
   pfcand_isEl.clear();
@@ -774,9 +765,8 @@ void AK4JetNtupleProducer::clearVars(){
   pfcand_dzsig.clear();
   pfcand_dxy.clear();
   pfcand_dxysig.clear();
-  pfcand_btagEtaRel.clear();
-  pfcand_btagPtRatio.clear();
-  pfcand_btagPParRatio.clear();
+  pfcand_index.clear();
+
   Muon_pt_.clear();
   Muon_eta_.clear();
   Muon_phi_.clear();
@@ -836,6 +826,7 @@ void AK4JetNtupleProducer::clearVars(){
   j_eta.clear();
   j_phi.clear();
   j_mass.clear();
+  j_npfcands.clear();
 
   j_nCHadrons.clear();
   j_nBHadrons.clear();
@@ -867,6 +858,8 @@ void AK4JetNtupleProducer::clearVars(){
   label_H_tautau.clear();
   label_H_qq.clear();
   label_QCD_all.clear();
+  f_pfcand_index.clear();
+  fj_npfcands.clear();
 
 
 }
