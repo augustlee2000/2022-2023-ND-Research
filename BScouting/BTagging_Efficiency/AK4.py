@@ -20,30 +20,28 @@ process.load('Configuration.StandardSequences.FrontierConditions_GlobalTag_cff')
 process.load('Configuration.StandardSequences.GeometryRecoDB_cff')
 process.load('Configuration.StandardSequences.MagneticField_cff')
 
-process.maxEvents = cms.untracked.PSet( input = cms.untracked.int32(1000)) #47168
-process.source = cms.Source("PoolSource",
-	fileNames = cms.untracked.vstring("/store/mc/Run3Summer22MiniAODv3/TT_TuneCP5_13p6TeV_powheg-pythia8/MINIAODSIM/124X_mcRun3_2022_realistic_v12_ext1-v3/2810000/0f0274b6-b4cd-4ed3-8bcf-3744e0704bcc.root"),
-        secondaryFileNames = cms.untracked.vstring(
-         	"/store/mc/Run3Summer22DRPremix/TT_TuneCP5_13p6TeV_powheg-pythia8/AODSIM/124X_mcRun3_2022_realistic_v12_ext1-v3/2810000/00c0a31b-fd93-4bb0-87e8-02f6921a2607.root",
-         	"/store/mc/Run3Summer22DRPremix/TT_TuneCP5_13p6TeV_powheg-pythia8/AODSIM/124X_mcRun3_2022_realistic_v12_ext1-v3/2810000/36607336-57c8-4c1a-be5d-f4f978478ec8.root",
-         	"/store/mc/Run3Summer22DRPremix/TT_TuneCP5_13p6TeV_powheg-pythia8/AODSIM/124X_mcRun3_2022_realistic_v12_ext1-v3/2810000/9d61998c-e9dc-4952-9674-76171199ee85.root",
-         	"/store/mc/Run3Summer22DRPremix/TT_TuneCP5_13p6TeV_powheg-pythia8/AODSIM/124X_mcRun3_2022_realistic_v12_ext1-v3/2810000/d2419612-82cb-4035-9802-fb31ab4a372b.root",
-            "/store/mc/Run3Summer22DRPremix/TT_TuneCP5_13p6TeV_powheg-pythia8/AODSIM/124X_mcRun3_2022_realistic_v12_ext1-v3/2810000/e792db21-006d-4ec8-a8e9-e58584bfb357.root"
-        )
-)
-
-# process.maxEvents = cms.untracked.PSet( input = cms.untracked.int32(100)) #47168
+# process.maxEvents = cms.untracked.PSet( input = cms.untracked.int32(1000)) #47168
 # process.source = cms.Source("PoolSource",
-# 	fileNames = cms.untracked.vstring("/store/mc/Run3Summer22MiniAODv3/BulkGravitonToHH_MX2220_MH100_TuneCP5_13p6TeV_madgraph-pythia8/MINIAODSIM/124X_mcRun3_2022_realistic_v12-v4/2550000/af583efd-b2b0-4a05-a49e-7cba1021c278.root"),
+# 	fileNames = cms.untracked.vstring("/store/mc/Run3Summer22MiniAODv3/TT_TuneCP5_13p6TeV_powheg-pythia8/MINIAODSIM/124X_mcRun3_2022_realistic_v12_ext1-v3/2810000/0f0274b6-b4cd-4ed3-8bcf-3744e0704bcc.root"),
 #         secondaryFileNames = cms.untracked.vstring(
-#          	"/store/mc/Run3Summer22DRPremix/BulkGravitonToHH_MX2220_MH100_TuneCP5_13p6TeV_madgraph-pythia8/AODSIM/124X_mcRun3_2022_realistic_v12-v4/2550000/598e21fd-c8e1-4b2b-a322-26406f0c52b2.root",
-#          	"/store/mc/Run3Summer22DRPremix/BulkGravitonToHH_MX2220_MH100_TuneCP5_13p6TeV_madgraph-pythia8/AODSIM/124X_mcRun3_2022_realistic_v12-v4/2550000/66160743-d7ab-4229-9e1e-6bf46ac533d6.root",
-#             "/store/mc/Run3Summer22DRPremix/BulkGravitonToHH_MX2220_MH100_TuneCP5_13p6TeV_madgraph-pythia8/AODSIM/124X_mcRun3_2022_realistic_v12-v4/2550000/6f885952-d329-47c5-aed6-0f3d3b5ad1ca.root",
-#             "/store/mc/Run3Summer22DRPremix/BulkGravitonToHH_MX2220_MH100_TuneCP5_13p6TeV_madgraph-pythia8/AODSIM/124X_mcRun3_2022_realistic_v12-v4/2550000/8c76d752-12d7-465f-a775-64cf62a08b7e.root"
-
-             
+#          	"/store/mc/Run3Summer22DRPremix/TT_TuneCP5_13p6TeV_powheg-pythia8/AODSIM/124X_mcRun3_2022_realistic_v12_ext1-v3/2810000/00c0a31b-fd93-4bb0-87e8-02f6921a2607.root",
+#          	"/store/mc/Run3Summer22DRPremix/TT_TuneCP5_13p6TeV_powheg-pythia8/AODSIM/124X_mcRun3_2022_realistic_v12_ext1-v3/2810000/36607336-57c8-4c1a-be5d-f4f978478ec8.root",
+#          	"/store/mc/Run3Summer22DRPremix/TT_TuneCP5_13p6TeV_powheg-pythia8/AODSIM/124X_mcRun3_2022_realistic_v12_ext1-v3/2810000/9d61998c-e9dc-4952-9674-76171199ee85.root",
+#          	"/store/mc/Run3Summer22DRPremix/TT_TuneCP5_13p6TeV_powheg-pythia8/AODSIM/124X_mcRun3_2022_realistic_v12_ext1-v3/2810000/d2419612-82cb-4035-9802-fb31ab4a372b.root",
+#             "/store/mc/Run3Summer22DRPremix/TT_TuneCP5_13p6TeV_powheg-pythia8/AODSIM/124X_mcRun3_2022_realistic_v12_ext1-v3/2810000/e792db21-006d-4ec8-a8e9-e58584bfb357.root"
 #         )
 # )
+
+process.maxEvents = cms.untracked.PSet( input = cms.untracked.int32(22400)) #47168
+process.source = cms.Source("PoolSource",
+	fileNames = cms.untracked.vstring("/store/mc/Run3Summer22MiniAODv3/BulkGravitonToHH_MX600_MH22_TuneCP5_13p6TeV_madgraph-pythia8/MINIAODSIM/124X_mcRun3_2022_realistic_v12-v4/30000/0ea2defc-f6da-4fb1-95a8-280555a62b40.root"),
+        secondaryFileNames = cms.untracked.vstring(
+         	"/store/mc/Run3Summer22DRPremix/BulkGravitonToHH_MX600_MH22_TuneCP5_13p6TeV_madgraph-pythia8/AODSIM/124X_mcRun3_2022_realistic_v12-v4/30000/07fa7492-e0a3-4087-b0a5-3d46b8344ecb.root",
+         	"/store/mc/Run3Summer22DRPremix/BulkGravitonToHH_MX600_MH22_TuneCP5_13p6TeV_madgraph-pythia8/AODSIM/124X_mcRun3_2022_realistic_v12-v4/30000/412f0428-d625-4519-b5cd-a91ac401f29f.root"
+
+             
+        )
+)
 
 
 
@@ -122,3 +120,5 @@ process.tree = cms.EDAnalyzer("AK4JetNtupleProducer",
 )
 
 process.p = cms.Path(process.genJetSequence*process.tree)
+
+
