@@ -32,20 +32,16 @@ process.source = cms.Source("PoolSource",
         )
 )
 
-
-
-# process.maxEvents = cms.untracked.PSet( input = cms.untracked.int32(1000))
+# process.maxEvents = cms.untracked.PSet( input = cms.untracked.int32(1000)) #47168
 # process.source = cms.Source("PoolSource",
-#     fileNames = cms.untracked.vstring("/store/mc/Run3Summer22EEMiniAODv3/TTtoLNu2Q_TuneCP5_13p6TeV_powheg-pythia8/MINIAODSIM/124X_mcRun3_2022_realistic_postEE_v1-v2/30000/b5d16dec-30fc-4a1e-a287-fd2b57c6c2bc.root"),
-#         secondaryFileNames = cms.untracked.vstring(
-#         "/store/mc/Run3Summer22EEDRPremix/TTtoLNu2Q_TuneCP5_13p6TeV_powheg-pythia8/AODSIM/124X_mcRun3_2022_realistic_postEE_v1-v2/30003/4c74832b-a3f0-48fb-9a76-e871fed3c151.root",
-#         "/store/mc/Run3Summer22EEDRPremix/TTtoLNu2Q_TuneCP5_13p6TeV_powheg-pythia8/AODSIM/124X_mcRun3_2022_realistic_postEE_v1-v2/30003/62d3132b-23bb-4001-9e67-27641ec3d098.root",
-#         "/store/mc/Run3Summer22EEDRPremix/TTtoLNu2Q_TuneCP5_13p6TeV_powheg-pythia8/AODSIM/124X_mcRun3_2022_realistic_postEE_v1-v2/30003/bd759eb2-5a6f-4582-ab32-fe5463891960.root",
-#         "/store/mc/Run3Summer22EEDRPremix/TTtoLNu2Q_TuneCP5_13p6TeV_powheg-pythia8/AODSIM/124X_mcRun3_2022_realistic_postEE_v1-v2/30003/c1bcdff5-73a5-460a-931c-b51fca6fc49b.root",
-#         "/store/mc/Run3Summer22EEDRPremix/TTtoLNu2Q_TuneCP5_13p6TeV_powheg-pythia8/AODSIM/124X_mcRun3_2022_realistic_postEE_v1-v2/30003/f45d6172-aab1-45f4-b07a-55a561225b3b.root"
-#         )
+# 	fileNames = cms.untracked.vstring(),
+#         secondaryFileNames = cms.untracked.vstring()
 # )
 
+
+process.options = cms.untracked.PSet(
+    SkipEvent = cms.untracked.vstring('ProductNotFound')
+)
 
 
 process.TFileService = cms.Service("TFileService",
@@ -53,12 +49,14 @@ process.TFileService = cms.Service("TFileService",
 )
 
 
-# Create SoftDrop pruned GEN jets
-process.load('PhysicsTools.NanoAOD.jetMC_cff')
-process.genJetSequence = cms.Sequence(
-   process.patJetPartonsNano+
-   process.genJetFlavourAssociation
-)
+# # # Create SoftDrop pruned GEN jets
+# process.load('PhysicsTools.NanoAOD.jetMC_cff')
+# process.genJetSequence = cms.Sequence(
+#    process.patJetPartonsNano+
+#    process.genJetFlavourAssociation,
+#    process.ak8GenJetsWithNu+
+#    process.ak8GenJetsWithNuSoftDrop
+# )
 
 # Create SoftDrop pruned GEN jets
 from RecoJets.JetProducers.ak8GenJets_cfi import ak8GenJets
@@ -76,10 +74,19 @@ process.ak8GenJetsWithNuSoftDrop = process.ak8GenJetsWithNu.clone(
     useExplicitGhosts=cms.bool(True)
 )
 
+# # Create SoftDrop pruned GEN jets
+process.load('PhysicsTools.NanoAOD.jetMC_cff')
 process.genJetSequence = cms.Sequence(
-    process.ak8GenJetsWithNu+
-    process.ak8GenJetsWithNuSoftDrop
+   process.patJetPartonsNano+
+   process.genJetFlavourAssociation+
+   process.ak8GenJetsWithNu+
+   process.ak8GenJetsWithNuSoftDrop
 )
+
+# process.genJetSequence = cms.Sequence(
+#     process.ak8GenJetsWithNu+
+#     process.ak8GenJetsWithNuSoftDrop
+# )
 
 # Create ParticleNet ntuple
 process.tree = cms.EDAnalyzer("AK4JetNtupleProducer",
@@ -91,6 +98,7 @@ process.tree = cms.EDAnalyzer("AK4JetNtupleProducer",
       muons = cms.InputTag( "hltScoutingMuonPacker" ),
       pfMet            = cms.InputTag("hltScoutingPFPacker","pfMetPt"),
       pfMetPhi         = cms.InputTag("hltScoutingPFPacker","pfMetPhi"),
+      gen_jet_data     = cms.InputTag("ak4GenJetsNoNu"),
 
 )
 
