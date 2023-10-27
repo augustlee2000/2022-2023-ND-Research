@@ -1,4 +1,3 @@
-
 #include <vector>
 
 #include "FWCore/Framework/interface/Frameworkfwd.h"
@@ -111,6 +110,9 @@ private:
   std::vector<Float16_t> pfcand_dzsig;
   std::vector<Float16_t> pfcand_dxy;
   std::vector<Float16_t> pfcand_dxysig;
+  std::vector<Float16_t> pfcand_trk_pt;
+  std::vector<Float16_t> pfcand_trk_eta;
+  std::vector<Float16_t> pfcand_trk_phi;
   std::vector<std::vector<Float16_t>> pfcand_index;
 
   std::vector<Float16_t> j_pt;
@@ -280,6 +282,9 @@ AK4JetNtupleProducer::AK4JetNtupleProducer(const edm::ParameterSet& iConfig):
   tree->Branch("pfcand_dzsig", &pfcand_dzsig);
   tree->Branch("pfcand_dxy", &pfcand_dxy);
   tree->Branch("pfcand_dxysig", &pfcand_dxysig);
+  tree->Branch("pfcand_trk_pt", &pfcand_trk_pt);
+  tree->Branch("pfcand_trk_eta", &pfcand_trk_eta);
+  tree->Branch("pfcand_trk_phi", &pfcand_trk_phi);
   tree->Branch("pfcand_index", &pfcand_index);
 
   tree->Branch("j_pt", &j_pt);
@@ -438,8 +443,8 @@ void AK4JetNtupleProducer::analyze(const edm::Event& iEvent, const edm::EventSet
 
   iEvent.getByToken(genjet_data_token_, genjet_data_);
 
-  //int pfcand_i = 0;
   for (auto pfcands_iter = pfcands_->begin(); pfcands_iter != pfcands_->end(); ++pfcands_iter) {
+
     float pfcands_iter_p = pfcands_iter->pt() * cosh(pfcands_iter->eta());
     auto rcm = particletable_->particle(HepPDT::ParticleID(pfcands_iter->pdgId())) != nullptr
                         ? particletable_->particle(HepPDT::ParticleID(pfcands_iter->pdgId()))->mass()
@@ -467,8 +472,9 @@ void AK4JetNtupleProducer::analyze(const edm::Event& iEvent, const edm::EventSet
     pfcand_dzsig.push_back(pfcands_iter->dzsig());
     pfcand_dxy.push_back(pfcands_iter->dxy());
     pfcand_dxysig.push_back(pfcands_iter->dxysig());
-
-
+    pfcand_trk_pt.push_back(pfcands_iter->trk_pt() );
+    pfcand_trk_eta.push_back(pfcands_iter->trk_eta());
+    pfcand_trk_phi.push_back(pfcands_iter->trk_phi());
   }
 
   fgen_no = 0;
@@ -677,10 +683,6 @@ void AK4JetNtupleProducer::analyze(const edm::Event& iEvent, const edm::EventSet
     Muon_vtxIndx_.push_back(std::vector<Int_t>(iter->vtxIndx()));
     n_mu++;
   }
-
-
-
-  
   ak4_jet_idx = 0;
   j_no = 0;
   for(auto &j: ak4_jets) {
@@ -812,6 +814,9 @@ void AK4JetNtupleProducer::clearVars(){
   pfcand_dxy.clear();
   pfcand_dxysig.clear();
   pfcand_index.clear();
+  pfcand_trk_pt.clear();
+  pfcand_trk_eta.clear();
+  pfcand_trk_phi.clear();
 
   Muon_pt_.clear();
   Muon_eta_.clear();
