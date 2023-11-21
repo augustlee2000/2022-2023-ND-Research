@@ -20,28 +20,19 @@ process.load('Configuration.StandardSequences.FrontierConditions_GlobalTag_cff')
 process.load('Configuration.StandardSequences.GeometryRecoDB_cff')
 process.load('Configuration.StandardSequences.MagneticField_cff')
 
-# process.maxEvents = cms.untracked.PSet( input = cms.untracked.int32(1000)) #47168
-# process.source = cms.Source("PoolSource",
-# 	fileNames = cms.untracked.vstring("/store/mc/Run3Summer22MiniAODv3/TT_TuneCP5_13p6TeV_powheg-pythia8/MINIAODSIM/124X_mcRun3_2022_realistic_v12_ext1-v3/2810000/0f0274b6-b4cd-4ed3-8bcf-3744e0704bcc.root"),
-#         secondaryFileNames = cms.untracked.vstring(
-#          	"/store/mc/Run3Summer22DRPremix/TT_TuneCP5_13p6TeV_powheg-pythia8/AODSIM/124X_mcRun3_2022_realistic_v12_ext1-v3/2810000/00c0a31b-fd93-4bb0-87e8-02f6921a2607.root",
-#          	"/store/mc/Run3Summer22DRPremix/TT_TuneCP5_13p6TeV_powheg-pythia8/AODSIM/124X_mcRun3_2022_realistic_v12_ext1-v3/2810000/36607336-57c8-4c1a-be5d-f4f978478ec8.root",
-#          	"/store/mc/Run3Summer22DRPremix/TT_TuneCP5_13p6TeV_powheg-pythia8/AODSIM/124X_mcRun3_2022_realistic_v12_ext1-v3/2810000/9d61998c-e9dc-4952-9674-76171199ee85.root",
-#          	"/store/mc/Run3Summer22DRPremix/TT_TuneCP5_13p6TeV_powheg-pythia8/AODSIM/124X_mcRun3_2022_realistic_v12_ext1-v3/2810000/d2419612-82cb-4035-9802-fb31ab4a372b.root",
-#             "/store/mc/Run3Summer22DRPremix/TT_TuneCP5_13p6TeV_powheg-pythia8/AODSIM/124X_mcRun3_2022_realistic_v12_ext1-v3/2810000/e792db21-006d-4ec8-a8e9-e58584bfb357.root"
-#         )
-# )
-
-process.maxEvents = cms.untracked.PSet( input = cms.untracked.int32(1000)) #47168
+process.maxEvents = cms.untracked.PSet( input = cms.untracked.int32(100)) #47168
 process.source = cms.Source("PoolSource",
-	fileNames = cms.untracked.vstring("/store/mc/Run3Summer22MiniAODv3/BulkGravitonToHH_MX600_MH22_TuneCP5_13p6TeV_madgraph-pythia8/MINIAODSIM/124X_mcRun3_2022_realistic_v12-v4/30000/0ea2defc-f6da-4fb1-95a8-280555a62b40.root"),
+	fileNames = cms.untracked.vstring("/store/mc/Run3Summer22MiniAODv4/TT_TuneCP5_13p6TeV_powheg-pythia8/MINIAODSIM/130X_mcRun3_2022_realistic_v5-v2/2520000/00c263d2-32c5-41f0-8f94-5cda0a135237.root"),
         secondaryFileNames = cms.untracked.vstring(
-         	"/store/mc/Run3Summer22DRPremix/BulkGravitonToHH_MX600_MH22_TuneCP5_13p6TeV_madgraph-pythia8/AODSIM/124X_mcRun3_2022_realistic_v12-v4/30000/07fa7492-e0a3-4087-b0a5-3d46b8344ecb.root",
-         	"/store/mc/Run3Summer22DRPremix/BulkGravitonToHH_MX600_MH22_TuneCP5_13p6TeV_madgraph-pythia8/AODSIM/124X_mcRun3_2022_realistic_v12-v4/30000/412f0428-d625-4519-b5cd-a91ac401f29f.root"
-
-             
+         	"/store/mc/Run3Summer22DRPremix/TT_TuneCP5_13p6TeV_powheg-pythia8/AODSIM/124X_mcRun3_2022_realistic_v12-v3/70000/050baf38-d1d8-43b5-93fc-6b206dcef3d3.root"
         )
 )
+
+# process.maxEvents = cms.untracked.PSet( input = cms.untracked.int32(1000)) #47168
+# process.source = cms.Source("PoolSource",
+# 	fileNames = cms.untracked.vstring(),
+#         secondaryFileNames = cms.untracked.vstring()
+# )
 
 
 process.options = cms.untracked.PSet(
@@ -53,15 +44,6 @@ process.TFileService = cms.Service("TFileService",
     fileName = cms.string("test.root")
 )
 
-
-# # # Create SoftDrop pruned GEN jets
-# process.load('PhysicsTools.NanoAOD.jetMC_cff')
-# process.genJetSequence = cms.Sequence(
-#    process.patJetPartonsNano+
-#    process.genJetFlavourAssociation,
-#    process.ak8GenJetsWithNu+
-#    process.ak8GenJetsWithNuSoftDrop
-# )
 
 # Create SoftDrop pruned GEN jets
 from RecoJets.JetProducers.ak8GenJets_cfi import ak8GenJets
@@ -88,14 +70,9 @@ process.genJetSequence = cms.Sequence(
    process.ak8GenJetsWithNuSoftDrop
 )
 
-# process.genJetSequence = cms.Sequence(
-#     process.ak8GenJetsWithNu+
-#     process.ak8GenJetsWithNuSoftDrop
-# )
-
 # Create ParticleNet ntuple
 process.tree = cms.EDAnalyzer("AK4JetNtupleProducer",
-      isQCD = cms.untracked.bool( '/QCD_' in params.inputDataset ),
+      isQCD = cms.untracked.bool( False ),
       gen_jets = cms.InputTag( "genJetFlavourAssociation" ),
       pf_candidates = cms.InputTag( "hltScoutingPFPacker" ),
       fgen_jets = cms.InputTag( "ak8GenJetsWithNuSoftDrop" ),
