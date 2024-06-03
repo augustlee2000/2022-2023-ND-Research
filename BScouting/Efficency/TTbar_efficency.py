@@ -93,6 +93,12 @@ def btagging_efficenty_v2(file):  #, hist_0, hist_1, hist_2):
     b_jets_cut = B_jet_mask > -1
     number_of_events_cut = np.array([len(jets) for jets in b_jets]) == 4
     muons_cut = muons == 1
+
+    jet_pt = tree["ScoutingJet_pt"].array()
+    pt_cut = jet_pt >= 30
+    filtered_jet_pt = jet_pt[pt_cut]
+    num_jets_after_cut = ak.num(filtered_jet_pt)
+    number_of_events_cut = num_jets_after_cut == 4
     
 
     met_pt_cut = tree["ScoutingMET_pt"].array() > 30
